@@ -38,7 +38,7 @@ npm run test:ios   # 앱 UI와 실제 홈 화면 위젯 추가
 1. `npm ci && npm run prepare:ios`를 실행합니다.
 2. `apps/ios/MementoMori.xcodeproj`를 Xcode로 엽니다. scheme은 **MementoMori**입니다.
 3. Xcode → Settings → Accounts에서 자신의 Apple 계정으로 로그인합니다. 유료 가입을 하지 않은 계정은 **Personal Team**으로 표시됩니다.
-4. 프로젝트의 **MementoMori**와 **MementoWidgets** 두 target → Signing & Capabilities에서 **Automatically manage signing**을 켜고 같은 Personal Team을 선택합니다. 자동 서명에 필요한 App ID 두 개를 사용합니다.
+4. `apps/ios/Config/LocalSigning.xcconfig.example`을 같은 폴더의 `LocalSigning.xcconfig`로 복사하고 `YOUR_TEAM_ID`를 자신의 Team ID로 바꿉니다. Team ID는 Xcode 계정의 Team 상세에서 확인합니다. 앱·위젯은 이 값을 상속하며 자동 서명을 사용합니다. Team 변경은 이 로컬 파일에서 하세요. Xcode target에서 직접 Team을 선택하면 공용 프로젝트에 개인 설정이 기록될 수 있습니다. 자동 서명에 필요한 App ID 두 개를 사용합니다.
 5. Bundle Identifier 충돌이 있다면 app은 `com.본인의고유이름.mementomori`, widget은 같은 app ID 뒤에 `.widgets`를 붙여 변경합니다. 실제 사용을 시작한 뒤에는 ID를 유지하세요.
 6. iPhone을 USB로 연결하고 Mac을 신뢰합니다. iPhone → 설정 → 개인정보 보호 및 보안 → **개발자 모드**를 켭니다. 재시작/확인이 요구될 수 있습니다.
 7. Xcode의 실행 대상을 자신의 iPhone으로 선택한 뒤 ▶ Run 또는 ⌘R을 누릅니다. iPhone에서 개발자 신뢰 요청이 표시되면 설정 → 일반 → VPN 및 기기 관리에서 자신의 계정을 확인합니다.
@@ -77,8 +77,10 @@ UITests/   # 실제 시뮬레이터 사용 흐름
 ../../packages/memento-core/ # Mac/iOS 공용 계산, 검증, 설정 계약
 ```
 
-앱과 확장에 동일한 App Groups entitlement(`group.com.rlagudals95.mementomori`)가 필요합니다. Xcode에서 두 target에 같은 Team을 선택하고 자동 서명 프로파일을 갱신하세요. 다른 계정으로 개발할 때는 자신이 등록할 수 있는 App Group ID로 `Shared/MementoMori.entitlements`와 `Shared/Design.swift`의 group 값을 함께 변경합니다. 실제 Team의 지원·서명이 확인되어야 설치할 수 있습니다. 공유 데이터는 기기에만 저장합니다.
+앱과 확장에 동일한 App Groups entitlement(`group.com.rlagudals95.mementomori`)가 필요합니다. 두 target은 `Config/LocalSigning.xcconfig`의 같은 Team을 상속합니다. 다른 계정으로 개발할 때는 자신이 등록할 수 있는 App Group ID로 `Shared/MementoMori.entitlements`와 `Shared/Design.swift`의 group 값을 함께 변경합니다. 실제 Team의 지원·서명이 확인되어야 설치할 수 있습니다. 공유 데이터는 기기에만 저장합니다.
 
 앱과 위젯은 별도 target, Debug/Release 설정, 고정 bundle ID, 앱 아이콘, 폰트 라이선스, UserDefaults 사용 이유가 포함된 PrivacyInfo.xcprivacy를 갖춥니다. 공개 배포 시에는 배포 서명, App Store 정보/스크린샷/개인정보 안내, 실기기 및 지원 OS 검증을 추가하세요. 결제·계정·서버를 먼저 추가할 필요는 없습니다.
 
-`MementoMori.xcodeproj`는 저장소에 포함되어 있어 별도 프로젝트 생성 도구 설치가 필요 없습니다. 소스 파일을 추가한 뒤 프로젝트를 재생성하려면 `python3 scripts/generate-ios-project.py`를 실행합니다. **재생성은 Xcode에서 로컬로 선택한 서명 Team을 초기화하므로 다시 선택해야 합니다.** 일반 빌드는 프로젝트를 재생성하지 않습니다.
+`MementoMori.xcodeproj`는 저장소에 포함되어 있어 별도 프로젝트 생성 도구 설치가 필요 없습니다. 소스 파일을 추가한 뒤 프로젝트를 재생성하려면 `python3 scripts/generate-ios-project.py`를 실행합니다. 재생성은 `Config/LocalSigning.xcconfig`를 변경하지 않아 개인 Team 설정을 유지합니다. 로컬 파일이 없어도 시뮬레이터와 CI 빌드는 가능합니다. 일반 빌드는 프로젝트를 재생성하지 않습니다.
+
+서명 설정의 파일 분리는 [Apple의 build configuration 파일 방식](https://developer.apple.com/documentation/xcode/adding-a-build-configuration-file-to-your-project)을 사용합니다. 인증서나 프로비저닝 파일은 이 설정 파일에 넣지 않습니다.

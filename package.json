@@ -11,6 +11,8 @@
     "build": "npm run build --workspace @mementomori/web",
     "preview": "npm run preview --workspace @mementomori/web --",
     "test": "npm test --workspace @mementomori/web",
+    "test:web": "npm test --workspace @mementomori/web",
+    "test:all": "bash scripts/check.sh",
     "test:browser": "npm run test:browser --workspace @mementomori/web --",
     "icons": "node scripts/icons.js",
     "build:mac": "bash scripts/build-mac.sh",

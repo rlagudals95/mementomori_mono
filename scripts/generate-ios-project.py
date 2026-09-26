@@ -29,13 +29,14 @@ products={}
 for target,name,kind in [('app','MementoMori.app','wrapper.application'),('widget','MementoWidgets.appex','wrapper.app-extension'),('test','MementoMoriUITests.xctest','wrapper.cfbundle')]:
     products[target]=add('product:'+target,f'isa = PBXFileReference; explicitFileType = {kind}; path = {quote(name)}; sourceTree = BUILT_PRODUCTS_DIR;')
 package=add('core-package','isa = XCLocalSwiftPackageReference; relativePath = ../../packages/memento-core;')
+signing=add('signing-config','isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Config/Signing.xcconfig"; sourceTree = "<group>";')
 product_group=add('products','isa = PBXGroup; children = '+array(list(products.values()))+'; name = Products; sourceTree = "<group>";')
-main_group=add('main-group','isa = PBXGroup; children = '+array(refs+[product_group])+'; sourceTree = "<group>";')
+main_group=add('main-group','isa = PBXGroup; children = '+array(refs+[signing,product_group])+'; sourceTree = "<group>";')
 base={'SWIFT_VERSION':'5.0','IPHONEOS_DEPLOYMENT_TARGET':'17.0','SDKROOT':'iphoneos','SUPPORTED_PLATFORMS':'iphoneos iphonesimulator','TARGETED_DEVICE_FAMILY':'1','CODE_SIGN_STYLE':'Automatic','MARKETING_VERSION':'0.1.0','CURRENT_PROJECT_VERSION':'1','CLANG_ENABLE_MODULES':'YES','ENABLE_USER_SCRIPT_SANDBOXING':'YES'}
 project_configs=[]
 for config in ['Debug','Release']:
     opts=base|({'ONLY_ACTIVE_ARCH':'YES','SWIFT_OPTIMIZATION_LEVEL':'-Onone','SWIFT_ACTIVE_COMPILATION_CONDITIONS':'DEBUG','DEBUG_INFORMATION_FORMAT':'dwarf'} if config=='Debug' else {'ONLY_ACTIVE_ARCH':'NO','SWIFT_OPTIMIZATION_LEVEL':'-O','DEBUG_INFORMATION_FORMAT':'dwarf-with-dsym'})
-    project_configs.append(add('project:'+config, 'isa = XCBuildConfiguration; buildSettings = '+settings(opts)+'; name = '+config+';'))
+    project_configs.append(add('project:'+config, 'isa = XCBuildConfiguration; baseConfigurationReference = '+signing+'; buildSettings = '+settings(opts)+'; name = '+config+';'))
 project_config=add('project-config','isa = XCConfigurationList; buildConfigurations = '+array(project_configs)+'; defaultConfigurationIsVisible = 0; defaultConfigurationName = Release;')
 def dependency(source,target):
     proxy=add('proxy:'+source+target, f'isa = PBXContainerItemProxy; containerPortal = {uid("project")}; proxyType = 1; remoteGlobalIDString = {uid("target:"+target)}; remoteInfo = {target};')

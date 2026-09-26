@@ -22,7 +22,7 @@ scripts/        # Mac/iOS 빌드·실행, 폰트·아이콘 준비
 .github/workflows/ # GitHub 빌드·테스트
 ```
 
-npm workspaces로 웹을 관리하고 Mac은 Swift Package Manager를 사용합니다. 아래 명령은 모두 레포 루트에서 실행합니다. iPhone은 Xcode 프로젝트, Mac은 Swift package를 사용하며 계산은 공용 Swift package를 공유합니다. 향후 Android는 `apps/android`를 추가하세요. 폴더별 책임과 공유 규칙은 [구조 안내](docs/ARCHITECTURE.md)에 있습니다.
+npm workspaces로 웹을 관리하고 Mac은 Swift Package Manager를 사용합니다. 아래 명령은 모두 레포 루트에서 실행합니다. iPhone은 Xcode 프로젝트, Mac은 Swift package를 사용하며 계산은 공용 Swift package를 공유합니다. 제품 개발 대상은 iOS·macOS이고 Android는 후순위입니다. 데스크톱은 Mac만 지원합니다. 폴더별 책임은 [구조 안내](docs/ARCHITECTURE.md), 현재 기능과 플랫폼별 차이는 [플랫폼 기준](docs/PLATFORMS.md)에 있습니다.
 
 ## 실행
 
@@ -40,6 +40,12 @@ npm test
 npm run build
 npm run preview
 npm run test:browser
+```
+
+`npm test`와 `npm run test:web`는 웹 단위 테스트만 실행합니다. macOS에서 전체 검증은 다음 명령을 사용하세요. 웹 단위 테스트·공용 Swift 테스트·웹 빌드와 브라우저 테스트·Mac 빌드·iOS 빌드와 UI 테스트를 순서대로 실행하며 실패 시 중단합니다. Xcode, iPhone 시뮬레이터 런타임, Chrome이 필요합니다. Mac 빌드는 `artifacts/mac/MementoMori.app`을 갱신하므로 실행 중인 해당 앱은 먼저 종료하세요.
+
+```sh
+npm run test:all
 ```
 
 브라우저 테스트는 설치된 Google Chrome을 사용합니다. 없으면 `npx --workspace @mementomori/web playwright install chrome`으로 테스트용 Chrome을 준비하세요. `npm run build` 뒤 실행해야 최신 배포본을 검사합니다.
@@ -126,7 +132,7 @@ npm run test:core
 npm run test:ios
 ```
 
-`dev:ios`는 이 Mac의 iPhone 시뮬레이터에서 실행합니다. 자신의 iPhone에는 `npm run prepare:ios` 후 `apps/ios/MementoMori.xcodeproj`를 열고 앱과 위젯 target에 같은 Personal Team을 선택하여 Run하세요. 무료 설치는 **7일마다 재빌드·재설치**가 필요합니다. 상용 배포는 하지 않았습니다.
+`dev:ios`는 이 Mac의 iPhone 시뮬레이터에서 실행합니다. 자신의 iPhone에는 `npm run prepare:ios` 후 로컬 서명 파일에 Team ID를 설정하고 `apps/ios/MementoMori.xcodeproj`에서 Run하세요. 절차는 [iPhone 안내](apps/ios/README.md)에 있습니다. 무료 설치는 **7일마다 재빌드·재설치**가 필요합니다. 상용 배포는 하지 않았습니다.
 
 앱은 초/일 카운트다운, 주간 달력, 오늘의 문장, 웹·Mac JSON 설정 이동을 지원합니다. 홈 화면은 작은/중간 크기, 잠금화면은 직사각형/인라인/원형을 제공합니다. 앱의 생년월일·기준 나이와 초·일 선택은 App Groups로 위젯에 자동 적용됩니다. 별도 생년월일을 입력한 위젯만 개별 설정을 사용합니다. 위젯도 콤마가 들어간 남은 총 초로 표시합니다. iOS 18 이상은 시스템이 자동 갱신하고 iOS 17은 timeline 갱신 시점의 총 초를 표시합니다.
 

@@ -154,3 +154,11 @@
 - Shared-core tests cover fallback grouping, zero padding, borrowing across a million and zero: 9 passed.
 - Final UI run: 3 passed, 0 failed. Exported home-screen screenshot confirms large, right-aligned square digits on two lines with no truncation or comma leakage; medium remains one line. Native seconds visibly change in both widget tests.
 - Final signed build installed successfully on the connected iPhone 14 Pro, preserving existing app data.
+
+## 2026-09-26 platform management
+
+- Active native targets: iOS and macOS. Desktop scope is Mac only; Android is deferred. `docs/PLATFORMS.md` records existing behavior, including the square-card seconds/days difference.
+- Added `npm run test:web` and macOS-only `npm run test:all`. Full checks build web assets before browser tests, test shared Swift once, and build Mac/iOS before the iOS UI tests. Failures stop the sequence. A running local Mac app prevents the full checks from replacing its app bundle; this guard was verified.
+- Xcode Debug/Release include shared `Signing.xcconfig`, which optionally includes ignored `LocalSigning.xcconfig`. The existing personal team was moved to that local file; the original project was backed up under ignored artifacts.
+- Deterministic project regeneration preserves the local signing file. Build settings resolve without it and contain no personal team, as expected on CI. The device build succeeds using local config with no Team ID command-line override.
+- Final `npm run test:all` completed with exit 0: web unit tests 12 passed, shared Swift tests 9 passed, browser tests 9 passed, iOS UI tests 3 passed, and web/Mac/iOS builds succeeded. The Mac app was relaunched after validation.

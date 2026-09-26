@@ -2,6 +2,8 @@
 
 ## 앱 경계
 
+현재 개발 대상은 iOS·macOS이며 데스크톱은 Mac만 지원합니다. Android는 후순위입니다. 플랫폼별 기능의 현재 차이는 [플랫폼 기준](PLATFORMS.md)에서 관리합니다.
+
 `apps/web`는 웹 HTML/CSS/JavaScript, Vite 구성, 정적 파일, 웹 테스트를 소유합니다. `apps/macos`는 Swift package와 네이티브 UI, 로컬 저장, 창 동작을 소유합니다. 폰트 준비 및 .app 패키징은 루트 `scripts/build-mac.sh`에서 수행합니다.
 
 `apps/ios`는 SwiftUI iPhone 앱, WidgetKit 확장, AppIntent 설정, iOS UI 테스트를 소유합니다. Android는 구현할 때 `apps/android`를 추가합니다. 앱별 빌드·배포는 독립적입니다. `packages/memento-core`는 macOS와 iOS가 공유하는 Foundation 기반 Swift package입니다.
@@ -20,6 +22,8 @@
 
 ## Git과 배포
 
+로컬 전체 검증은 macOS에서 `npm run test:all`을 실행합니다. `npm test`는 웹 단위 테스트만 실행합니다. 통합 검증은 공용 Swift 테스트를 한 번 실행하고 웹·Mac·iOS 빌드와 웹/iOS 사용 흐름을 검사합니다. CI는 플랫폼별 job을 유지하여 실패한 플랫폼을 구분합니다.
+
 소스, 테스트, 라이선스, 설정 파일, lockfile을 추적합니다. node_modules, dist, Swift 빌드 캐시, artifacts, 비밀 키와 인증서는 제외합니다. 개인정보가 포함된 사용자 설정 파일을 fixture로 커밋하지 마세요.
 
 GitHub의 checks workflow는 웹·Mac·iOS를 별도 job으로 빌드·테스트합니다. 공통 계약 변경도 검사하도록 모든 PR과 main/master push에서 관련 앱을 검사합니다. 원격 저장소는 rlagudals95/mementomori_mono입니다. 로컬 검증과 원격 CI 결과는 별도로 확인합니다.
@@ -32,4 +36,4 @@ iOS 앱은 UserDefaults의 settings.v1에 공통 설정을 저장합니다. 앱�
 
 WidgetKit의 실행 예산 때문에 임의의 숫자를 매초 다시 그리지 않습니다. 앱은 현재 시각 기반 TimelineView, 위젯 타이머는 시스템의 동적 날짜 Text, 날 표시에는 공용 WidgetClock의 날짜 경계 timeline을 사용합니다. iOS UI와 디자인은 공용 Foundation package에 넣지 않습니다.
 
-프로젝트 생성은 표준 라이브러리 Python 스크립트로 수행하며 생성된 Xcode 프로젝트를 추적합니다. 일반 빌드는 프로젝트를 재생성하지 않아 사용자의 로컬 서명 설정을 유지합니다. Personal Team의 기기 서명은 사용자 계정에서, CI는 계정 없는 시뮬레이터에서 진행합니다. 공개 배포용 서명·TestFlight·App Store 제출은 이번 개발에 포함하지 않습니다.
+프로젝트 생성은 표준 라이브러리 Python 스크립트로 수행하며 생성된 Xcode 프로젝트를 추적합니다. 프로젝트의 Debug/Release는 `apps/ios/Config/Signing.xcconfig`를 읽고, 이 파일은 Git에서 제외한 `LocalSigning.xcconfig`를 선택적으로 포함합니다. 개인 Team ID는 로컬 파일에만 기록합니다. 재생성해도 이 파일을 유지하며, 파일이 없는 CI는 계정 없는 시뮬레이터로 빌드합니다. Xcode target에 Team을 직접 지정하면 로컬 파일을 덮어쓰는 설정이 프로젝트에 생길 수 있으므로 Team 변경은 로컬 파일에서 수행합니다. 공개 배포용 서명·TestFlight·App Store 제출은 이번 개발에 포함하지 않습니다.

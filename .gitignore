@@ -8,6 +8,7 @@ apps/macos/Sources/MementoMori/Resources/*.ttf
 apps/ios/Resources/*.ttf
 **/xcuserdata/
 **/*.xcuserstate
+apps/ios/Config/LocalSigning.xcconfig
 .env
 .env.*
 !.env.example

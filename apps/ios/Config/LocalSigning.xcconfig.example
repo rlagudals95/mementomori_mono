@@ -1,0 +1,3 @@
+// Copy to LocalSigning.xcconfig and replace the placeholder with your Team ID.
+// Xcode > Settings > Accounts > your account > Team details.
+DEVELOPMENT_TEAM = YOUR_TEAM_ID
