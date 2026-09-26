@@ -5,53 +5,47 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#fafafa" />
   <link rel="icon" type="image/svg+xml" href="/icon.svg" />
-  <title>움직임 시안 — 메멘토모리</title>
+  <title>시간의 다섯 장면 — 메멘토모리</title>
 </head>
-<body class="motion-studio">
+<body class="scene-studio">
   <a class="skip-link" href="#main">본문으로 이동</a>
-  <div class="motion-shell">
-    <header class="motion-header">
-      <a class="motion-brand" href="/">mementomori.</a>
-      <a href="/widgets.html">위젯 시안 <span aria-hidden="true">↗</span></a>
+  <div class="scene-shell">
+    <header class="scene-header">
+      <a class="scene-brand" href="/">mementomori.</a>
+      <a href="/motion-minimal.html">이전 움직임 시안 <span aria-hidden="true">↗</span></a>
     </header>
     <main id="main">
-      <section class="motion-intro">
-        <div><p class="motion-eyebrow">MOTION STUDY / 01—03</p><h1>움직임은 작게.<br />지금은 선명하게.</h1></div>
-        <p>사라지고, 번지고, 붙잡히지 않는 시간.<br />숫자의 자리를 지키는 세 가지 움직임.</p>
+      <section class="scene-intro">
+        <div><p class="scene-eyebrow">TIME, IN OTHER WORDS / 01—05</p><h1>숫자 너머,<br />시간의 다섯 장면.</h1></div>
+        <p>쌓이는 모래. 구르는 돌. 한 번뿐인 필름.<br />남은 시간을, 작은 장면으로 바라봅니다.</p>
       </section>
-      <div class="motion-toolbar">
-        <span class="example-label">예시 시간 · 같은 속도로 흐릅니다</span>
-        <div class="motion-controls">
-          <div class="motion-themes" role="group" aria-label="시안 테마">
-            <button data-theme="dark" aria-pressed="true">다크</button><button data-theme="light" aria-pressed="false">라이트</button>
-          </div>
-          <label><input type="checkbox" id="reduce-motion" /> 움직임 줄이기</label>
+      <div class="scene-toolbar">
+        <span>가상의 83년 · 실제 시간에 맞춰 흐르는 시안</span>
+        <div class="scene-controls">
+          <div role="group" aria-label="장면 테마"><button data-theme="dark" aria-pressed="true">다크</button><button data-theme="light" aria-pressed="false">라이트</button></div>
+          <label><input id="reduce-motion" type="checkbox" /> 움직임 줄이기</label>
         </div>
       </div>
-      <section class="motion-grid" aria-label="인터랙티브 카운트다운 시안 세 가지">
-        <article class="motion-specimen">
-          <div class="specimen-heading"><span>01 / DISSOLVE</span><span>소멸</span></div>
-          <button class="motion-widget" data-motion="dissolve" aria-label="사라지는 한 초. 눌러 숫자의 흔적을 보세요."></button>
-          <div class="motion-description"><h2>사라지는 한 초.</h2><p>바뀐 숫자만 아주 짧게 흐려져 사라집니다.<br />지나간 1초의 흔적을 남깁니다.</p><span class="motion-instruction">숫자를 눌러 흔적을 느껴보세요.</span></div>
-        </article>
-        <article class="motion-specimen">
-          <div class="specimen-heading"><span>02 / RIPPLE</span><span>현재</span></div>
-          <button class="motion-widget" data-motion="ripple" aria-label="지금의 파문. 눌러 지금의 점에서 파문을 만드세요."></button>
-          <div class="motion-description"><h2>지금의 파문.</h2><p>한 초마다 지금의 점에서 작은 파문이 납니다.<br />숫자는 차분히, 감각은 선 위에.</p><span class="motion-instruction">누르면 조금 더 선명하게 번집니다.</span></div>
-        </article>
-        <article class="motion-specimen">
-          <div class="specimen-heading"><span>03 / MOMENT</span><span>순간</span></div>
-          <button class="motion-widget" data-motion="moment" aria-label="잠깐 붙잡은 순간. 누르고 있으면 그 순간의 숫자가 아래에 남습니다. 카운트다운은 계속됩니다."></button>
-          <div class="motion-description"><h2>잠깐 붙잡은 순간.</h2><p>누르는 동안 바라본 순간이 아래에 남습니다.<br />그 위로, 시간은 계속 흐릅니다.</p><span class="motion-instruction">길게 눌러보세요. 키보드는 스페이스.</span></div>
-        </article>
+      <div class="scene-selector" role="tablist" aria-label="시간을 표현하는 다섯 시안"></div>
+      <section class="scene-viewer" role="tabpanel" id="scene-panel" tabindex="0">
+        <div class="scene-stage">
+          <div class="stage-top"><span>mementomori.</span><span id="scene-code">01 / THE HOURGLASS</span></div>
+          <div class="scene-art" aria-hidden="true"></div>
+          <div class="stage-bottom"><div><span class="stage-caption">당신의 시간은 유한합니다.</span><div class="stage-counter"><span id="seconds" aria-live="off"></span><small>초</small></div></div><span class="stage-fraction" id="life-fraction"></span></div>
+        </div>
+        <div class="scene-caption">
+          <div><span class="scene-category" id="scene-category"></span><h2 id="scene-title"></h2><p id="scene-message" role="status" aria-live="polite"></p></div>
+          <div class="scene-action"><button id="scene-action"></button><span id="scene-hint"></span></div>
+        </div>
       </section>
-      <section class="motion-footnote">
-        <p>한 번뿐인 시간을 표현하는 움직임.<br /><strong>숫자를 읽는 데 방해되지 않는 것이 먼저입니다.</strong></p>
-        <p>이 화면은 앱·Mac의 움직임을 비교하는 웹 시안입니다.<br />실제 설정을 바꾸지 않으며, iPhone 홈 위젯 적용은 별도 검토합니다.</p>
+      <section class="scene-index" aria-labelledby="index-title">
+        <div class="index-heading"><h2 id="index-title">같은 시간, 다른 감각.</h2><span>시안을 눌러 비교해보세요.</span></div>
+        <div class="concept-list"></div>
       </section>
+      <aside class="scene-note"><p>모래와 초의 높이는 남은 수명의 비율을 표현합니다.<br />흐름을 보여주는 움직임은 비유이며, 수명을 빠르게 소진시키지 않습니다.</p><p>앱·Mac에서 비교하는 인터랙티브 웹 시안입니다.<br />실제 설정은 변경하지 않습니다. iPhone 홈 위젯의 움직임은 별도 검토합니다.</p></aside>
     </main>
-    <footer class="motion-footer"><span>유한한 삶. 무한히 소중한 오늘.</span><span>MEMENTOMORI / MOTION</span></footer>
+    <footer class="scene-footer"><span>유한한 삶. 무한히 소중한 오늘.</span><span>MEMENTOMORI / SCENES</span></footer>
   </div>
-  <script type="module" src="/src/motion-studio.js"></script>
+  <script type="module" src="/src/scene-studio.js"></script>
 </body>
 </html>
