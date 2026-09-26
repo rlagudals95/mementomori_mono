@@ -2,7 +2,7 @@ import { defineConfig } from 'vite';
 import { createHash } from 'node:crypto';
 
 export default defineConfig({
-  build: { rollupOptions: { input: { main: 'index.html', widgets: 'widgets.html' } } },
+  build: { rollupOptions: { input: { main: 'index.html', widgets: 'widgets.html', motion: 'motion.html' } } },
   plugins: [{
     name: 'offline-app-shell',
     enforce: 'post',
