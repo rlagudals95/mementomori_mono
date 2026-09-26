@@ -18,6 +18,7 @@ final class MementoMoriUITests: XCTestCase {
         let result = home.cells.matching(NSPredicate(format: "label CONTAINS[c] %@ OR label == %@", "memento", "메멘토모리")).firstMatch
         guard result.waitForExistence(timeout: 10) else { XCTFail("Widget gallery did not list MementoMori"); return }
         result.tap()
+        home.swipeLeft() // Select the medium horizontal widget.
         let addWidget = home.buttons.matching(NSPredicate(format: "label CONTAINS %@ OR label CONTAINS %@", "Add Widget", "위젯 추가")).firstMatch
         XCTAssertTrue(addWidget.waitForExistence(timeout: 5), home.debugDescription)
         addWidget.tap()
@@ -27,8 +28,12 @@ final class MementoMoriUITests: XCTestCase {
         XCTAssertTrue(widget.waitForExistence(timeout: 15), home.debugDescription)
         let setup = home.staticTexts["앱에서 나의 시간을 설정하세요."]
         XCTAssertFalse(setup.exists, "Saved app profile must appear in widget without separate birthday input")
-        let timer = home.staticTexts.matching(NSPredicate(format: "label MATCHES %@", "[0-9,]+:[0-9]{2}:[0-9]{2}")).firstMatch
+        let timer = home.staticTexts.matching(NSPredicate(format: "label MATCHES %@", "[0-9,]+초")).firstMatch
         XCTAssertTrue(timer.waitForExistence(timeout: 15), home.debugDescription)
+        XCTAssertGreaterThan(timer.frame.width, 200, "Verify the horizontal medium widget")
+        let before = timer.label
+        let changes = XCTNSPredicateExpectation(predicate: NSPredicate(format: "label != %@", before), object: timer)
+        XCTAssertEqual(XCTWaiter.wait(for: [changes], timeout: 8), .completed, "Widget seconds must keep counting")
         let image = XCTAttachment(screenshot: home.screenshot()); image.name = "Home screen widget"; image.lifetime = .keepAlways; self.add(image)
     }
 

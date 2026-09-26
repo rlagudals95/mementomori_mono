@@ -133,3 +133,15 @@
 - iOS UI 테스트 2개 통과. 앱에 생일을 저장한 후 실제 홈 위젯을 추가하고 별도 설정 없이 시간:분:초 숫자가 표시되는 것을 검사했다.
 - iPhone 14 Pro용 자동 서명 빌드 성공. 기존 앱 위에 업데이트 설치하고 devicectl로 앱 실행 성공을 확인했다. 실제 휴대폰 홈/잠금화면에서의 갱신과 저전력 모드 동작은 사용자 화면 확인이 남아 있다.
 - Team ID/인증서/프로비저닝 정보는 원격 저장소에 저장하지 않는다.
+
+
+## 2026-09-26 seconds countdown and horizontal widget
+
+- iOS 18+ uses the system DateOffset style with second-only fields and sign.never. iOS 17 shows total seconds at the timeline entry date.
+- Medium cards use 18pt vertical / 20pt horizontal padding and up to 44pt Pretendard digits. Font size adapts to short card heights; secondary copy stays on one line.
+- Small cards use a width-based digit size to avoid truncating long counters.
+- UI tests select a medium widget, assert a counter width above 200pt, validate the seconds-only label, and verify that it changes within 8 seconds.
+- The actual horizontal home widget screenshot was visually inspected on iPhone 16e simulator. Refresh frequency remains managed by iOS.
+
+- Final iOS UI run: 2 passed, 0 failed. Screenshots confirm both medium and small counters show all digits.
+- The seconds-only / horizontal-padding build was installed and launched on iPhone 14 Pro. Installing the final small-card font adjustment requires reconnecting the device (unavailable at last check).

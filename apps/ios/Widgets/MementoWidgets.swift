@@ -80,7 +80,7 @@ struct ClockWidgetView: View {
                 if let value = entry.snapshot {
                     if value.passed { Text("오늘도 삶은 계속됩니다.").font(Design.font(13, weight: .bold)) }
                     else if entry.configuration.display == .timer {
-                        Text(timerInterval: min(entry.timerStart, entry.date)...value.end, countsDown: true, showsHours: true)
+                        SecondsCountdown(end: value.end, fallback: value.seconds)
                             .font(Design.font(20, weight: .bold)).monospacedDigit().lineLimit(1).minimumScaleFactor(0.4)
                     } else {
                         Text("\(Design.number(value.days))일").font(Design.font(24, weight: .bold)).monospacedDigit()

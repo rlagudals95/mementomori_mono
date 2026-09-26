@@ -11,7 +11,7 @@ struct WidgetGuide: View {
                     Text("자주 보는 곳에,\n유한한 시간을.").font(Design.font(32, weight: .bold)).tracking(-1)
                     let profile = store.settings.state.profile
                     let now = Date()
-                    WidgetFace(snapshot: profile.flatMap { try? Life.snapshot($0, now: now) }, date: now, timerStart: now)
+                    WidgetFace(snapshot: profile.flatMap { try? Life.snapshot($0, now: now) }, date: now, timerStart: now, timer: store.settings.state.mode == "seconds")
                         .frame(height: 170).background(Design.ink)
                     Text("홈 화면").font(Design.font(20, weight: .bold))
                     Text("홈 화면의 빈 곳을 길게 누르세요. 편집 → 위젯 추가에서 ‘메멘토모리’를 찾아 작은 크기 또는 중간 크기로 추가하세요.")
@@ -32,7 +32,7 @@ struct WidgetGuide: View {
                         }.padding(16).overlay { Rectangle().stroke(Design.ink.opacity(0.2)) }
                     }
                     Text("나의 시간은 앱의 초·일 선택에 따라 표시됩니다. 위젯을 길게 눌러 ‘위젯 편집’에서 배경을 바꿀 수 있습니다. 다른 생년월일을 입력하면 그 위젯만 별도 시간을 표시합니다. 앱 설정을 다시 사용하려면 위젯의 생년월일을 비우세요.")
-                    Text("‘흐르는 시간’은 시간:분:초로 표시됩니다. 표시 갱신은 iOS가 관리하며, 화면 꺼짐·저전력 모드에서는 매초 움직이지 않을 수 있습니다.")
+                    Text("‘흐르는 시간’은 남은 총 초로 표시됩니다. iOS 18 이상에서는 시스템이 자동으로 숫자를 갱신하고, iOS 17에서는 위젯 갱신 시점의 숫자를 표시합니다. 표시 갱신은 iOS가 관리하며, 화면 꺼짐·저전력 모드에서는 매초 움직이지 않을 수 있습니다.")
                         .font(Design.font(12)).foregroundStyle(.secondary)
                     Text("숫자는 설정한 나이를 기준으로 한 가늠자입니다. 개인의 수명 예측이 아닙니다.")
                         .font(Design.font(11)).foregroundStyle(.secondary)
