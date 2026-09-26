@@ -1,0 +1,35 @@
+[
+  {
+    "timezone": "Asia/Seoul",
+    "profile": {
+      "birthday": "1995-01-01",
+      "years": 83.7
+    },
+    "now": "2026-09-26T03:00:00.000Z",
+    "seconds": 1639811283,
+    "days": 18979,
+    "progress": 0.3791690450598242
+  },
+  {
+    "timezone": "America/New_York",
+    "profile": {
+      "birthday": "2000-02-29",
+      "years": 80
+    },
+    "now": "2026-03-08T07:00:00.000Z",
+    "seconds": 1703403360,
+    "days": 19715,
+    "progress": 0.32526620441670034
+  },
+  {
+    "timezone": "UTC",
+    "profile": {
+      "birthday": "1900-01-01",
+      "years": 80
+    },
+    "now": "2026-09-26T03:00:00.000Z",
+    "seconds": 0,
+    "days": 0,
+    "progress": 1
+  }
+]

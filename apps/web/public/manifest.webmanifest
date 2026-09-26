@@ -1,0 +1,17 @@
+{
+  "id": "/",
+  "name": "메멘토모리 — 지금, 살아 있는 시간",
+  "short_name": "메멘토모리",
+  "description": "유한한 삶을 기억하고 오늘의 소중함을 느끼는 작은 시간 창",
+  "lang": "ko",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#fafafa",
+  "theme_color": "#fafafa",
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

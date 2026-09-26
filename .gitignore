@@ -1,0 +1,14 @@
+node_modules/
+**/dist/
+.DS_Store
+artifacts/
+**/.build/
+**/.swiftpm/
+apps/macos/Sources/MementoMori/Resources/*.ttf
+.env
+.env.*
+!.env.example
+*.p12
+*.p8
+*.mobileprovision
+*.provisionprofile

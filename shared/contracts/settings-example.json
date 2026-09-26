@@ -1,0 +1,10 @@
+{
+  "app": "mementomori",
+  "version": 1,
+  "state": {
+    "profile": { "birthday": "1995-01-01", "years": 83.7 },
+    "intention": { "text": "다시 오지 않을, 지금.", "date": "2026-09-26" },
+    "mode": "seconds"
+  },
+  "widget": { "variant": "wide", "theme": "dark" }
+}

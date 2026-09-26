@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#fafafa" />
+  <link rel="icon" type="image/svg+xml" href="/icon.svg" />
+  <title>위젯 — 메멘토모리</title>
+</head>
+<body class="widget-studio">
+  <a class="skip-link" href="#main">본문으로 이동</a>
+  <div class="page-shell">
+    <header class="site-header">
+      <a class="brand" href="/" aria-label="메멘토모리 처음으로"><span>mementomori.</span><small>메멘토모리</small></a>
+      <a class="studio-back" href="/">나의 시간으로 돌아가기 <span aria-hidden="true">↗</span></a>
+    </header>
+    <main id="main">
+      <section class="studio-intro">
+        <div><p class="eyebrow">MEMENTOMORI / WIDGETS</p><h1>삶을 기억하는,<br />가장 작은 방식.</h1></div>
+        <p>흐르는 숫자. 끝이 있는 선.<br />한 번의 시선으로, 지금을 기억합니다.</p>
+      </section>
+
+      <section class="widget-workbench" aria-label="위젯 디자인 미리보기">
+        <div class="studio-controls">
+          <div class="format-picker" role="group" aria-label="위젯 형태"><button data-variant="wide" aria-pressed="true">가로형</button><button data-variant="square" aria-pressed="false">정사각형</button><button data-variant="slim" aria-pressed="false">한 줄형</button></div>
+          <div class="theme-picker" role="group" aria-label="위젯 테마"><button data-theme="dark" aria-pressed="true"><i class="theme-dot dark-dot" aria-hidden="true"></i>다크</button><button data-theme="light" aria-pressed="false"><i class="theme-dot light-dot" aria-hidden="true"></i>라이트</button></div>
+        </div>
+        <div class="widget-stage">
+          <div class="stage-top"><span>LIVE PREVIEW</span><span id="preview-state">예시</span></div>
+          <div id="widget-preview" class="preview-holder"></div>
+          <div class="stage-bottom"><span id="preview-dimensions">360 × 190</span><span>오른쪽 아래 모서리를 드래그해 보세요.</span></div>
+        </div>
+        <div class="studio-actions"><p id="widget-context">생년월일을 설정하면 나의 시간이 표시됩니다.</p><button id="studio-pip" class="primary-button">이 디자인으로 작은 창 열기 ↗</button></div>
+        <p id="studio-feedback" class="studio-feedback" role="status"></p>
+      </section>
+
+      <section class="widget-collection" aria-label="위젯 크기별 디자인">
+        <article class="widget-specimen"><div class="specimen-art" id="specimen-wide"></div><div class="specimen-caption"><span>01 / SECONDS</span><h2>흐르는 시간을 느끼다.</h2><p>줄어드는 초와 지금의 위치.<br />메멘토모리의 기본 위젯.</p><button class="text-button" data-select="wide">가로형 선택 ↗</button></div></article>
+        <article class="widget-specimen"><div class="specimen-art" id="specimen-square"></div><div class="specimen-caption"><span>02 / DAYS</span><h2>오늘의 무게를 기억하다.</h2><p>작은 정사각형에 남은 날을 담습니다.<br />숫자 하나, 문장 하나.</p><button class="text-button" data-select="square">정사각형 선택 ↗</button></div></article>
+        <article class="widget-specimen"><div class="specimen-art" id="specimen-slim"></div><div class="specimen-caption"><span>03 / GLANCE</span><h2>일상의 한편에 남다.</h2><p>시선을 오래 붙잡지 않는 한 줄.<br />작게 놓아도 시간은 흐릅니다.</p><button class="text-button" data-select="slim">한 줄형 선택 ↗</button></div></article>
+      </section>
+      <div class="widget-design-note"><p><strong>선 위의 점은 지금입니다.</strong> 지나온 구간은 흐리게, 남아 있는 구간은 선명하게. 끝의 짧은 선은 시간의 유한함을 나타냅니다.</p><p>평균수명을 기준으로 한 가늠자이며 개인의 수명 예측이 아닙니다. 이 화면은 동작하는 디자인 미리보기입니다.</p></div>
+    </main>
+    <footer><span>유한한 삶. 무한히 소중한 오늘.</span><span>MEMENTOMORI / MEMENTO VIVERE</span></footer>
+  </div>
+  <script type="module" src="/src/widget-studio.js"></script>
+</body>
+</html>

@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#fafafa" />
+    <meta name="description" content="언젠가 끝나기에, 지금이 소중합니다. 남은 시간을 바라보고 오늘의 소중함을 기억하는 메멘토모리." />
+    <link rel="icon" type="image/svg+xml" href="/icon.svg" />
+    <link rel="apple-touch-icon" href="/icon-192.png" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <title>메멘토모리 — 지금, 살아 있는 시간</title>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">본문으로 이동</a>
+    <div class="page-shell">
+      <header class="site-header">
+        <a class="brand" href="/" aria-label="메멘토모리 처음으로">
+          <span>mementomori.</span><small>메멘토모리</small>
+        </a>
+        <nav aria-label="주요 메뉴"><button id="settings-toggle" class="text-button" aria-expanded="false" aria-controls="settings-panel">나의 시간 설정</button><button id="keep-toggle" class="outline-button" aria-expanded="false" aria-controls="keep-panel">곁에 두기 <span aria-hidden="true">↗</span></button></nav>
+      </header>
+
+      <section id="settings-panel" class="panel" aria-labelledby="settings-title" hidden>
+        <div class="panel-heading"><div><span class="eyebrow">YOUR TIME</span><h2 id="settings-title">당신의 시간은 어디쯤인가요?</h2></div><button class="close-button" data-close="settings-panel" aria-label="시간 설정 닫기">×</button></div>
+        <p>생년월일 하나로 시작해요. 입력한 정보는 이 브라우저에만 저장됩니다.</p>
+        <form id="profile-form" novalidate>
+          <div class="form-fields"><label>생년월일<input id="birthday" name="birthday" type="date" min="1900-01-01" required aria-describedby="profile-error" /></label><label>기준 수명<span class="input-with-unit"><input id="years" name="years" type="number" min="1" max="120" step="0.1" value="83.7" required aria-describedby="lifespan-note profile-error" /><span>세</span></span></label><button class="primary-button" type="submit">나의 시간 만나기 <span aria-hidden="true">↗</span></button></div>
+          <p id="profile-error" class="error-message" role="alert"></p>
+          <p id="lifespan-note" class="fine-print">기본값 83.7세 · 대한민국 2024년 출생 시 기대수명. 개인의 수명을 예측하는 값은 아니며, 원하는 기준으로 바꿀 수 있어요.</p>
+        </form>
+        <div class="settings-transfer">
+          <h3>웹과 Mac, 같은 시간으로.</h3>
+          <p class="fine-print">설정 파일로 생년월일, 오늘의 문장과 위젯 디자인을 옮길 수 있어요. 자동 동기화는 되지 않습니다.</p>
+          <div class="transfer-actions"><button id="export-settings" class="outline-button">설정 내보내기 ↗</button><button id="import-settings" class="text-button">설정 가져오기 ↙</button><input id="settings-file" type="file" accept=".json,application/json" hidden /></div>
+          <div id="import-confirmation" class="reset-confirmation" hidden><p>가져온 파일로 현재 생년월일, 오늘의 문장과 위젯 디자인을 바꿀까요?</p><button id="confirm-import" class="outline-button">설정 바꾸기</button><button id="cancel-import" class="text-button">취소</button></div>
+          <p id="transfer-message" class="fine-print" role="status"></p>
+        </div>
+        <button id="reset-button" class="text-button subtle" hidden>이 기기의 기록 지우기</button>
+        <div id="reset-confirmation" class="reset-confirmation" hidden><p>생년월일과 오늘의 문장을 이 브라우저에서 지울까요?</p><button id="confirm-reset" class="outline-button">모두 지우기</button><button id="cancel-reset" class="text-button">취소</button></div>
+      </section>
+
+      <section id="keep-panel" class="panel" aria-labelledby="keep-title" hidden>
+        <div class="panel-heading"><div><span class="eyebrow">A LITTLE REMINDER</span><h2 id="keep-title">당신의 일상, 한편에.</h2></div><button class="close-button" data-close="keep-panel" aria-label="곁에 두기 닫기">×</button></div>
+        <div class="keep-options"><div><h3>노트북의 작은 창</h3><p id="pip-description">작은 창을 띄워 다른 일을 하는 동안에도 시간을 곁에 두세요. 원래 탭은 열어 두어야 해요.</p><button id="pip-button" class="primary-button">작은 창 띄우기 ↗</button><a class="widget-design-link" href="/widgets.html">위젯 디자인 고르기 ↗</a></div><div><h3>휴대폰 홈 화면</h3><p>iPhone은 Safari의 공유 메뉴 → ‘홈 화면에 추가’. Android는 브라우저 메뉴의 ‘앱 설치’ 또는 ‘홈 화면에 추가’를 선택하세요.</p><button id="install-button" class="outline-button" hidden>앱 설치하기 ↗</button><span class="fine-print">앱을 여는 아이콘입니다. 움직이는 홈 화면 위젯은 아닙니다.</span></div><div><h3>온전히 바라보기</h3><p>숫자와 오늘의 문장만 남겨 보세요. 잠시 멈추어 시간을 바라보는 화면입니다.</p><button id="focus-button" class="outline-button">집중 화면 열기 ↗</button></div></div>
+      </section>
+
+      <main id="main">
+        <div id="demo-notice" class="demo-notice"><span><span class="status-dot"></span>지금은 1995년 1월 1일생의 예시를 보고 있어요.</span><button id="start-button" class="text-button">나의 시간으로 바꾸기 <span aria-hidden="true">↗</span></button></div>
+
+        <section class="time-section" aria-labelledby="time-heading">
+          <div class="intro-row"><div><p class="eyebrow"><span class="live-dot"></span>지금, 살아 있는 시간</p><h1 id="time-heading">언젠가 끝나기에,<br /><span>지금이 소중합니다.</span></h1></div><div class="intro-note"><span class="tiny-label">MEMENTOMORI</span><p>죽음을 기억하라.<br />그리고, 오늘을 살아라.</p></div></div>
+          <div class="clock-layout"><div class="clock-main"><div class="clock-toolbar"><span id="countdown-label">기준 수명까지 남은 시간</span><div class="view-switch" role="group" aria-label="시간 표시 단위"><button id="seconds-mode" aria-pressed="true">초</button><button id="days-mode" aria-pressed="false">일</button></div></div><div class="countdown" role="timer" aria-live="off" aria-label="기준 수명까지 남은 시간"><span id="remaining-number">—</span><span id="remaining-unit" class="counter-unit">초</span></div><p id="time-detail" class="time-detail"></p><p id="passed-message" class="passed-message" hidden>통계의 기준을 넘어, 오늘도 당신의 시간은 이어집니다.</p></div>
+          <div class="life-dial"><svg id="dial-svg" viewBox="0 0 180 180" aria-hidden="true"><g id="dial-ticks"></g><circle id="dial-now" cx="90" cy="13" r="4" fill="currentColor" /></svg><div class="dial-label"><span id="life-percent">—</span><small>지나온 삶</small></div></div></div>
+          <div class="life-line"><div class="life-line-track"><div id="life-line-fill"></div><span id="life-line-now"></span></div><div class="life-line-labels"><span id="birth-label">태어난 날</span><span class="present-label">오늘, 여기</span><span id="reference-label">83.7세의 기준</span></div></div>
+          <div class="clock-footnote"><span>이 숫자는 예측이 아닌, 오늘을 기억하는 가늠자입니다.</span><button id="method-link" class="text-button">계산 기준 보기 <span aria-hidden="true">↗</span></button></div>
+        </section>
+
+        <div class="lower-layout"><section class="weeks-section" aria-labelledby="weeks-heading"><div class="section-title"><div><span class="eyebrow">LIFE IN WEEKS</span><h2 id="weeks-heading">삶을 이루는 작은 순간들</h2></div><span class="tiny-label">한 점, 한 주</span></div><canvas id="weeks-canvas" role="img" aria-label="지나온 주와 앞으로의 주를 나타내는 삶의 달력"></canvas><div class="week-legend"><span><i class="legend-dot lived"></i>지나온 주 <b id="lived-weeks"></b></span><span><i class="legend-dot current"></i>이번 주</span><span><i class="legend-dot future"></i>앞으로의 주 <b id="future-weeks"></b></span></div><p class="fine-print">왼쪽부터 한 주씩, 위에서 아래로. 작은 점들이 모여 한 번의 삶이 됩니다.</p></section>
+
+        <section class="intention-section" aria-labelledby="intention-heading"><span class="eyebrow">MAKE TODAY MATTER</span><h2 id="intention-heading">오늘, 무엇을<br />아끼고 싶나요?</h2><p>거창하지 않아도 괜찮아요.<br />미뤄 둔 전화 한 통, 느리게 걷는 저녁.</p><form id="intention-form"><label class="sr-only" for="intention-input">오늘 아끼고 싶은 한 가지</label><textarea id="intention-input" rows="2" maxlength="100" placeholder="오늘의 나에게 한 문장" aria-describedby="intention-help"></textarea><div class="intention-actions"><span id="intention-help" class="fine-print">이 기기에만, 오늘의 한 문장.</span><button class="text-button" type="submit" id="intention-save">기억하기 ↗</button></div></form><div class="intention-signoff">MEMENTO VIVERE. <span aria-hidden="true">↗</span></div></section></div>
+
+        <section id="method-panel" class="method-panel" hidden aria-labelledby="method-heading"><div class="panel-heading"><h2 id="method-heading">삶을 예측하지 않습니다.</h2><button class="close-button" data-close="method-panel" aria-label="계산 기준 닫기">×</button></div><p>대한민국 2024년 생명표의 남녀 전체 출생 시 기대수명 <strong>83.7년</strong>을 기본 기준으로 씁니다. 현재 나이의 기대여명이나 개인의 건강 상태를 반영한 예측은 아닙니다.</p><p>태어난 날의 현지 시각 0시에 기준 수명 × 365.2425일을 더하고, 지금 시각과의 차이를 초로 표시합니다. 출생 시각을 모르는 만큼 이 숫자의 정밀함이 예측의 정확함을 뜻하지는 않습니다.</p><p>기준을 지난 경우 숫자는 0에서 멈추고, 오늘도 삶이 이어진다는 문장을 보여줍니다. 설정에서 기준 수명을 언제든 바꿀 수 있어요.</p><a href="https://www.kostat.go.kr/boardDownload.es?bid=208&list_no=439533&seq=1" target="_blank" rel="noreferrer">2024년 생명표 원문 보기 ↗</a></section>
+      </main>
+      <footer><a href="/widgets.html">위젯 디자인 보기 ↗</a><span>MEMENTOMORI <span class="footer-cross" aria-hidden="true">/</span> MEMENTO VIVERE</span></footer>
+    </div>
+    <button id="exit-focus" class="outline-button" hidden>집중 화면 닫기 <span aria-hidden="true">↙</span></button>
+    <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

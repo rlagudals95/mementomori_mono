@@ -1,0 +1,29 @@
+{
+  "name": "mementomori",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "apps/web"
+  ],
+  "scripts": {
+    "dev": "npm run dev --workspace @mementomori/web --",
+    "build": "npm run build --workspace @mementomori/web",
+    "preview": "npm run preview --workspace @mementomori/web --",
+    "test": "npm test --workspace @mementomori/web",
+    "test:browser": "npm run test:browser --workspace @mementomori/web --",
+    "icons": "node scripts/icons.js",
+    "build:mac": "bash scripts/build-mac.sh",
+    "dev:mac": "npm run build:mac && open artifacts/mac/MementoMori.app",
+    "test:mac": "swift test --package-path apps/macos"
+  },
+  "dependencies": {
+    "pretendard": "^1.3.9"
+  },
+  "devDependencies": {
+    "sharp": "^0.35.4"
+  },
+  "engines": {
+    "node": ">=22.12.0"
+  }
+}
