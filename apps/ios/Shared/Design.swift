@@ -60,6 +60,43 @@ struct SecondsCountdown: View {
     }
 }
 
+struct SquareSecondsCountdown: View {
+    let end: Date
+    let seconds: Int64
+    let width: CGFloat
+    let size: CGFloat
+    var body: some View {
+        if #available(iOS 18.0, *), seconds >= 1_000_000 {
+            // Measure with the same SwiftUI font as the live text, so commas
+            // land on the exact split boundary without leaking onto either row.
+            VStack(alignment: .trailing, spacing: 0) {
+                probe("4,000,").hidden()
+                    .overlay(alignment: .leading) { fullCounter }
+                    .clipped().accessibilityHidden(true)
+                probe("000,000초").hidden()
+                    .overlay(alignment: .trailing) { fullCounter }
+                    .clipped()
+            }.frame(maxWidth: .infinity, alignment: .trailing)
+                .accessibilityElement(children: .contain).accessibilityIdentifier("square-counter")
+        } else {
+            if #available(iOS 18.0, *) { live.frame(maxWidth: .infinity, alignment: .trailing) }
+            else { Text(SplitSeconds.text(seconds)).multilineTextAlignment(.trailing) }
+        }
+    }
+    private func probe(_ value: String) -> some View {
+        Text(value).font(Design.font(size, weight: .bold)).monospacedDigit()
+            .lineLimit(1).fixedSize()
+    }
+    private var fullCounter: some View {
+        probe("4,000,000,000초").hidden().overlay(alignment: .trailing) { live }
+    }
+    private var live: some View {
+        SecondsCountdown(end: end, fallback: seconds)
+            .font(Design.font(size, weight: .bold)).monospacedDigit()
+            .multilineTextAlignment(.trailing).lineLimit(1)
+    }
+}
+
 struct WidgetFace: View {
     var snapshot: Snapshot?
     var date: Date
@@ -75,7 +112,7 @@ struct WidgetFace: View {
 
     var body: some View {
         GeometryReader { geometry in
-            let numberSize: CGFloat = compact ? min(21, max(15, (geometry.size.width - 32) / 7.5)) : min(44, max(30, (geometry.size.height - 111) / 1.2))
+            let numberSize: CGFloat = compact ? min(30, max(22, (geometry.size.width - 32) / 5.2)) : min(44, max(30, (geometry.size.height - 111) / 1.2))
             VStack(alignment: .leading, spacing: 0) {
                 HStack {
                     Text("mementomori.").font(Design.font(12, weight: .bold))
@@ -89,10 +126,15 @@ struct WidgetFace: View {
                             .font(Design.font(compact ? 11 : 13)).opacity(0.65).lineLimit(1).minimumScaleFactor(0.8)
                         Group {
                             if snapshot.passed { Text("오늘") }
+                            else if timer && compact {
+                                SquareSecondsCountdown(end: snapshot.end, seconds: snapshot.seconds,
+                                                       width: geometry.size.width - 32, size: numberSize)
+                            }
                             else if timer { SecondsCountdown(end: snapshot.end, fallback: snapshot.seconds) }
                             else { Text("\(Design.number(snapshot.days))일") }
                         }.font(Design.font(numberSize, weight: .bold)).monospacedDigit()
-                            .lineLimit(1).minimumScaleFactor(0.65).frame(maxWidth: .infinity, alignment: .leading)
+                            .lineLimit(compact && timer ? 2 : 1).multilineTextAlignment(compact && timer ? .trailing : .leading)
+                            .minimumScaleFactor(0.75).frame(maxWidth: .infinity, alignment: compact && timer ? .trailing : .leading)
                     }
                     Spacer(minLength: 6)
                     LifeLine(progress: snapshot.progress, color: ink)

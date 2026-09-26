@@ -145,3 +145,12 @@
 
 - Final iOS UI run: 2 passed, 0 failed. Screenshots confirm both medium and small counters show all digits.
 - The seconds-only / horizontal-padding build was installed and launched on iPhone 14 Pro. Installing the final small-card font adjustment requires reconnecting the device (unavailable at last check).
+
+
+## 2026-09-26 square counter split
+
+- Square seconds counters split before the last two three-digit groups and align right. The two rows use the native live formatter with the same deadline, with a fixed six-digit suffix boundary measured in the same monospaced font. Leading zeroes in the lower six digits are retained across million boundaries. Short values remain one line.
+- Custom live formatters did not render in the actual widget, so the final implementation uses native DateOffset text. Timeline entries switch to the life-continues state at the reference age.
+- Shared-core tests cover fallback grouping, zero padding, borrowing across a million and zero: 9 passed.
+- Final UI run: 3 passed, 0 failed. Exported home-screen screenshot confirms large, right-aligned square digits on two lines with no truncation or comma leakage; medium remains one line. Native seconds visibly change in both widget tests.
+- Final signed build installed successfully on the connected iPhone 14 Pro, preserving existing app data.
