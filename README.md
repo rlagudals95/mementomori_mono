@@ -74,6 +74,7 @@ Service Worker는 배포 파일과 폰트를 미리 저장합니다. 최초 온�
 - `apps/web/vite.config.js`: 오프라인 배포 파일 생성.
 - `apps/web/tests/`: 계산 단위 테스트와 실제 브라우저 사용 흐름 테스트.
 - [제품 평가와 실행 계획](docs/PRODUCT.md).
+- [후속 기능 상세 기획: 미루고 있는 삶](docs/PRD-mementomori-life-goals.md) / [구현 계획](docs/IMPLEMENTATION-life-goals.md). 기획 단계이며 아직 구현하지 않았습니다.
 - [검증 결과와 남은 확인 항목](docs/VERIFICATION.md).
 
 폰트: Pretendard Variable 1.3.9. 로컬 번들로 제공하며 SIL Open Font License를 따릅니다. 라이선스는 `apps/web/public/licenses/pretendard.txt`에 포함되어 있습니다.
