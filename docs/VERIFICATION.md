@@ -102,3 +102,24 @@
 - 빌드 캐시는 새 경로에서 다시 생성했으며 기존 Swift 캐시는 ignored artifacts 아래 보관. 빌드 파일/캐시의 Git 제외 확인.
 - GitHub checks workflow 추가. 원격 GitHub 실행/외부 배포는 하지 않음.
 - 과거 검증 기록의 소스 경로는 이전 당시 기록이며 최신 경로는 루트 README와 ARCHITECTURE.md를 따른다.
+
+## iPhone 개인용 앱 + WidgetKit — 2026-09-26
+
+- `apps/ios`에 iOS 17 이상 SwiftUI 앱, 홈 화면 작은/중간 위젯, 잠금화면 직사각형/인라인/원형 위젯을 추가했다. 공개 배포·TestFlight는 하지 않았다.
+- Mac의 MementoCore와 테스트를 `packages/memento-core`로 추출했다. 기존 설정 키, JSON v1 계약, Mac bundle ID를 유지한다.
+- 웹 단위 테스트 12개, 공용 Swift 테스트 8개 통과. 추가 Swift 테스트는 위젯의 하루 경계, 기준 도달 시 타이머 종료, 잘못된 프로필 거부를 검증한다.
+- macOS release 빌드와 로컬 서명 통과. 실제 Pretendard 파일의 PostScript 이름을 CoreText로 확인했고 iOS/Mac에서 존재하지 않는 폰트 이름을 쓰던 부분을 Regular/Medium/SemiBold/Bold 이름으로 수정했다. 실행 중인 사용자 Mac 앱은 강제 재시작하지 않았다.
+- iPhone 17 Pro / iOS 26.2 시뮬레이터 UI 테스트 2개 통과: 잘못된 날짜 거부, 테스트 프로필 저장, 초 감소, 종료/재실행 복원; iOS 위젯 갤러리에서 메멘토모리 선택, 실제 홈 화면 위젯 추가, 설정 전 유한함 문구 표시.
+- 시스템 UI의 검색 결과는 button이 아닌 cell이고 ‘위젯 추가’ 라벨에 앞 공백이 있어 초기 자동화 탐색이 실패했다. 시스템 검색 입력을 완료하고 cell/라벨을 맞추어 최종 위젯 추가 테스트를 통과했다.
+- 시뮬레이터 앱과 위젯 빌드 성공. 실기기용 arm64 Release도 `CODE_SIGNING_ALLOWED=NO`로 컴파일 성공. 실제 iPhone에 설치 가능한 서명 완료를 뜻하지 않는다.
+- iPhone 16e 시뮬레이터에서 `dev:ios`로 앱 실행 및 시작 화면 확인. 테스트 프로필(2000-01-01)로 앱 숫자/달력/폰트 화면을 확인했다. 실제 사용자 생년월일을 사용하지 않았다.
+- 결과 화면: 로컬 ignored 경로 `artifacts/ios/iphone-countdown.png`, `artifacts/ios/home-widget.png`. 앱·확장에 Pretendard 라이선스와 개인정보 manifest를 포함했다.
+
+### 남은 기기 검증
+
+- 연결된 iPhone이 없어 Personal Team 서명·USB 실기기 설치·7일 후 재설치는 하지 않았다. 사용자가 Xcode 계정과 두 target의 Team을 선택해야 한다.
+- 홈 위젯의 설정 전 표시와 추가 경로는 시뮬레이터에서 확인했다. 위젯 편집에서 실제 개인 프로필 입력, 시스템 타이머, 잠금화면 각 가족, Always-On/저전력 모드, iOS 17~25는 실기기에서 추가 확인해야 한다.
+- 앱과 위젯은 데이터를 각각 저장한다. 자동 공유와 클라우드 동기화는 포함하지 않는다. 위젯의 AppIntent 설정과 앱의 UserDefaults는 구분하여 설명했다.
+- 앱은 초 단위 총 초 숫자, 위젯은 일 또는 시스템의 시간:분:초 표시이다. WidgetKit 갱신과 timeline 전환은 OS 정책에 따라 지연될 수 있다.
+- JSON 계산/계약 검증은 공용 테스트로 확인했다. iOS 파일 선택기와 Files 앱을 통한 가져오기/내보내기 전체 UI 왕복은 추가 수동 검증이 필요하다.
+- CI에 iOS 빌드/테스트 job을 추가했다. 이번 기록은 로컬 결과이며 원격 CI 결과와 별개이다.

@@ -3,7 +3,8 @@ import AppKit
 import MementoCore
 
 func moriFont(_ size: CGFloat, weight: Font.Weight = .regular) -> Font {
-    .custom("PretendardVariable", size: size).weight(weight)
+    let face = weight == .bold ? "Bold" : (weight == .semibold ? "SemiBold" : (weight == .medium ? "Medium" : "Regular"))
+    return .custom("PretendardVariable-\(face)", size: size)
 }
 
 struct DragHandle: NSViewRepresentable {

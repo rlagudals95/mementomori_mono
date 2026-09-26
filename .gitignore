@@ -5,6 +5,9 @@ artifacts/
 **/.build/
 **/.swiftpm/
 apps/macos/Sources/MementoMori/Resources/*.ttf
+apps/ios/Resources/*.ttf
+**/xcuserdata/
+**/*.xcuserstate
 .env
 .env.*
 !.env.example

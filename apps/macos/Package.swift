@@ -5,9 +5,8 @@ let package = Package(
     name: "MementoMori",
     platforms: [.macOS(.v13)],
     products: [.executable(name: "MementoMori", targets: ["MementoMori"])],
+    dependencies: [.package(path: "../../packages/memento-core")],
     targets: [
-        .target(name: "MementoCore"),
-        .executableTarget(name: "MementoMori", dependencies: ["MementoCore"], resources: [.copy("Resources")]),
-        .testTarget(name: "MementoCoreTests", dependencies: ["MementoCore"])
+        .executableTarget(name: "MementoMori", dependencies: [.product(name: "MementoCore", package: "memento-core")], resources: [.copy("Resources")])
     ]
 )
