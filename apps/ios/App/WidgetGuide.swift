@@ -18,8 +18,8 @@ struct WidgetGuide: View {
                     Text("잠금화면").font(Design.font(20, weight: .bold))
                     Text("잠금화면을 길게 누르고 사용자화 → 잠금화면 → 시계 아래 위젯 영역을 누르세요. ‘메멘토모리’를 선택하세요.")
                     Divider()
-                    Text("위젯에도 나의 시간 설정하기").font(Design.font(18, weight: .bold))
-                    Text("추가한 위젯을 길게 눌러 ‘위젯 편집’을 여세요. 잠금화면은 사용자화 중 추가된 위젯을 한 번 더 누르면 설정할 수 있습니다.")
+                    Text("앱에서 한 번, 모든 위젯에").font(Design.font(18, weight: .bold))
+                    Text("앱에서 저장한 생년월일과 기준 나이가 위젯에 자동으로 적용됩니다. 기존 위젯도 앱을 한 번 열면 나의 시간을 읽습니다.")
                     if let profile {
                         HStack {
                             VStack(alignment: .leading, spacing: 6) {
@@ -31,7 +31,7 @@ struct WidgetGuide: View {
                                 .font(Design.font(11, weight: .bold)).frame(minHeight: 44)
                         }.padding(16).overlay { Rectangle().stroke(Design.ink.opacity(0.2)) }
                     }
-                    Text("앱과 위젯은 설정을 각각 보관합니다. 위젯마다 같은 생년월일과 기준 나이를 입력하세요. 표시 방식은 ‘남은 날’ 또는 ‘흐르는 시간’, 배경은 다크·라이트를 고를 수 있습니다.")
+                    Text("나의 시간은 앱의 초·일 선택에 따라 표시됩니다. 위젯을 길게 눌러 ‘위젯 편집’에서 배경을 바꿀 수 있습니다. 다른 생년월일을 입력하면 그 위젯만 별도 시간을 표시합니다. 앱 설정을 다시 사용하려면 위젯의 생년월일을 비우세요.")
                     Text("‘흐르는 시간’은 시간:분:초로 표시됩니다. 표시 갱신은 iOS가 관리하며, 화면 꺼짐·저전력 모드에서는 매초 움직이지 않을 수 있습니다.")
                         .font(Design.font(12)).foregroundStyle(.secondary)
                     Text("숫자는 설정한 나이를 기준으로 한 가늠자입니다. 개인의 수명 예측이 아닙니다.")

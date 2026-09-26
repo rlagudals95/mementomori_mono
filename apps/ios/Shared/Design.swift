@@ -3,6 +3,18 @@ import CoreText
 import UIKit
 import MementoCore
 
+enum SharedSettings {
+    static let group = "group.com.rlagudals95.mementomori"
+    static let key = "settings.v1"
+    static var defaults: UserDefaults? { UserDefaults(suiteName: group) }
+    static func read() -> SettingsFile? {
+        defaults?.data(forKey: key).flatMap { try? SettingsFile.decode($0) }
+    }
+    static func write(_ settings: SettingsFile) {
+        if let data = try? JSONEncoder().encode(settings) { defaults?.set(data, forKey: key) }
+    }
+}
+
 enum Design {
     static let ink = Color(red: 0.09, green: 0.09, blue: 0.09)
     static let paper = Color(red: 0.98, green: 0.98, blue: 0.98)
@@ -45,7 +57,7 @@ struct WidgetFace: View {
     var message = ""
     var invalid = false
     var example = false
-    var setupMessage = "길게 눌러 나의 시간을 설정하세요."
+    var setupMessage = "앱에서 나의 시간을 설정하세요."
     private var ink: Color { dark ? Design.paper : Design.ink }
 
     var body: some View {
@@ -86,7 +98,7 @@ struct WidgetFace: View {
                 }
             } else {
                 Text(invalid ? "설정을 확인해 주세요." : "당신의 시간은\n유한합니다.")
-                    .font(Design.font(compact ? 22 : 26, weight: .bold))
+                    .font(Design.font(compact ? 22 : 26, weight: .bold)).lineLimit(2).minimumScaleFactor(0.7).fixedSize(horizontal: false, vertical: true)
                 Spacer(minLength: 0)
                 Text(invalid ? "생년월일과 기준 나이를 확인해 주세요." : setupMessage)
                     .font(Design.font(11)).opacity(0.65)

@@ -28,7 +28,7 @@ GitHub의 checks workflow는 웹·Mac·iOS를 별도 job으로 빌드·테스트
 
 ## iOS 개인 설치와 공개 배포 경계
 
-iOS 앱은 UserDefaults의 settings.v1에 공통 설정을 저장합니다. 위젯은 WidgetConfigurationIntent의 입력값으로 계산하여 앱 컨테이너 접근이나 App Groups entitlement에 의존하지 않습니다. 앱↔위젯 자동 공유는 아직 없으며, 현재 프로필과 위젯 설정은 독립적입니다. 추후 자동 공유를 추가하면 App Groups 저장소를 연결하고 기존 intent 설정을 마이그레이션합니다. 웹↔Mac↔iOS 이동은 동일한 v1 JSON으로 가능합니다.
+iOS 앱은 UserDefaults의 settings.v1에 공통 설정을 저장합니다. 앱은 저장·초기화·첫 실행 시 App Groups UserDefaults에도 settings.v1을 기록하고 WidgetCenter에 timeline 갱신을 요청합니다. 위젯의 생년월일 입력이 비어 있으면 공유 프로필·앱의 초/일 모드를 사용합니다. 생년월일을 직접 입력한 위젯은 기존 intent 설정을 유지합니다. 앱과 확장은 같은 App Groups entitlement와 서명 프로파일이 필요합니다. 웹↔Mac↔iOS 이동은 동일한 v1 JSON으로 가능합니다.
 
 WidgetKit의 실행 예산 때문에 임의의 숫자를 매초 다시 그리지 않습니다. 앱은 현재 시각 기반 TimelineView, 위젯 타이머는 시스템의 동적 날짜 Text, 날 표시에는 공용 WidgetClock의 날짜 경계 timeline을 사용합니다. iOS UI와 디자인은 공용 Foundation package에 넣지 않습니다.
 

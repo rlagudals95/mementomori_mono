@@ -17,16 +17,27 @@ struct ClockProvider: AppIntentTimelineProvider {
     }
     func timeline(for configuration: ClockConfiguration, in context: Context) async -> Timeline<ClockEntry> {
         let now = Date()
-        let profile = Profile(birthday: configuration.birthday.trimmingCharacters(in: .whitespacesAndNewlines), years: configuration.years)
+        guard let profile = profile(configuration) else {
+            return Timeline(entries: [entry(configuration, date: now)], policy: .never)
+        }
         guard let dates = try? WidgetClock.dates(profile: profile, now: now) else {
             return Timeline(entries: [entry(configuration, date: now)], policy: .never)
         }
         let entries = dates.map { entry(configuration, date: $0, timerStart: now) }
         return Timeline(entries: entries, policy: entries.last?.snapshot?.passed == true ? .never : .atEnd)
     }
+    private func profile(_ configuration: ClockConfiguration) -> Profile? {
+        let birthday = configuration.birthday.trimmingCharacters(in: .whitespacesAndNewlines)
+        return birthday.isEmpty ? SharedSettings.read()?.state.profile : Profile(birthday: birthday, years: configuration.years)
+    }
     private func entry(_ configuration: ClockConfiguration, date: Date, timerStart: Date? = nil) -> ClockEntry {
         let birthday = configuration.birthday.trimmingCharacters(in: .whitespacesAndNewlines)
-        let value = try? Life.snapshot(Profile(birthday: birthday, years: configuration.years), now: date)
+        let value = profile(configuration).flatMap { try? Life.snapshot($0, now: date) }
+        let configuration = configuration
+        if birthday.isEmpty, let settings = SharedSettings.read() {
+            configuration.display = settings.state.mode == "days" ? .days : .timer
+            if configuration.message.isEmpty { configuration.message = Design.thought(settings, at: date) }
+        }
         return ClockEntry(date: date, timerStart: timerStart ?? date, configuration: configuration, snapshot: value, invalid: !birthday.isEmpty && value == nil)
     }
     private func preview() -> ClockEntry {
@@ -74,7 +85,7 @@ struct ClockWidgetView: View {
                     } else {
                         Text("\(Design.number(value.days))일").font(Design.font(24, weight: .bold)).monospacedDigit()
                     }
-                } else { Text(entry.invalid ? "생년월일을 확인해 주세요." : "길게 눌러 시간을 설정하세요.").font(Design.font(11)) }
+                } else { Text(entry.invalid ? "생년월일을 확인해 주세요." : "앱에서 시간을 설정하세요.").font(Design.font(11)) }
             }.frame(maxWidth: .infinity, alignment: .leading)
         }
     }
@@ -85,7 +96,7 @@ struct MementoClockWidget: Widget {
     var body: some WidgetConfiguration {
         AppIntentConfiguration(kind: kind, intent: ClockConfiguration.self, provider: ClockProvider()) { entry in ClockWidgetView(entry: entry) }
             .configurationDisplayName("메멘토모리")
-            .description("자주 보는 곳에, 유한한 시간을. 생년월일과 기준 나이를 설정하세요.")
+            .description("자주 보는 곳에, 유한한 시간을. 앱에서 설정한 나의 시간이 자동으로 표시됩니다.")
             .supportedFamilies([.systemSmall, .systemMedium, .accessoryRectangular, .accessoryInline, .accessoryCircular])
             .contentMarginsDisabled()
     }

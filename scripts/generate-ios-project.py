@@ -61,6 +61,7 @@ for target,files,name,bundle,kind in [('app',app_files,'MementoMori','com.rlagud
     framework_phase=add('frameworks:'+target,'isa = PBXFrameworksBuildPhase; buildActionMask = 2147483647; files = '+array(frameworks)+'; runOnlyForDeploymentPostprocessing = 0;')
     phases=[source_phase,framework_phase,resource_phase]; deps=[]
     opts={'PRODUCT_NAME':name,'PRODUCT_BUNDLE_IDENTIFIER':bundle,'SWIFT_EMIT_LOC_STRINGS':'YES'}
+    if target!='test': opts['CODE_SIGN_ENTITLEMENTS']='Shared/MementoMori.entitlements'
     if target=='app':
         opts|={'INFOPLIST_FILE':'App/Info.plist','ASSETCATALOG_COMPILER_APPICON_NAME':'AppIcon','SUPPORTS_MACCATALYST':'NO'}
         embed=add('embedwidget',f'isa = PBXBuildFile; fileRef = {products["widget"]}; settings = {{ ATTRIBUTES = (RemoveHeadersOnCopy,); }};')

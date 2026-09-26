@@ -2,6 +2,7 @@ import XCTest
 
 final class MementoMoriUITests: XCTestCase {
     func testHomeWidgetCanBeAdded() throws {
+        testProfileValidationPersistenceAndClock()
         let app = XCUIApplication(); app.launch()
         XCUIDevice.shared.press(.home)
         let home = XCUIApplication(bundleIdentifier: "com.apple.springboard")
@@ -24,6 +25,10 @@ final class MementoMoriUITests: XCTestCase {
         if done.waitForExistence(timeout: 3) { done.tap() }
         let widget = home.descendants(matching: .any).matching(NSPredicate(format: "label CONTAINS %@", "유한합니다")).firstMatch
         XCTAssertTrue(widget.waitForExistence(timeout: 15), home.debugDescription)
+        let setup = home.staticTexts["앱에서 나의 시간을 설정하세요."]
+        XCTAssertFalse(setup.exists, "Saved app profile must appear in widget without separate birthday input")
+        let timer = home.staticTexts.matching(NSPredicate(format: "label MATCHES %@", "[0-9,]+:[0-9]{2}:[0-9]{2}")).firstMatch
+        XCTAssertTrue(timer.waitForExistence(timeout: 15), home.debugDescription)
         let image = XCTAttachment(screenshot: home.screenshot()); image.name = "Home screen widget"; image.lifetime = .keepAlways; self.add(image)
     }
 
