@@ -64,7 +64,6 @@
 .scene-note { display: flex; justify-content: space-between; gap: 32px; padding: 32px 0 48px; }
 .scene-note p { font-size: 11px; line-height: 1.8; color: var(--muted); }
 .scene-footer { display: flex; justify-content: space-between; gap: 24px; border-top: 1px solid var(--faint); padding: 24px 0 32px; font-size: 10px; color: var(--muted); }
-.train-scene { touch-action: pan-y; cursor: crosshair; }
 .scene-studio.motion-reduced *, .scene-studio.motion-reduced *::before, .scene-studio.motion-reduced *::after { animation: none !important; transition: none !important; }
 @media (max-width: 1000px) { .scene-shell { padding: 0 32px; } .scene-tab { gap: 8px; padding: 14px 8px; font-size: 12px; } .concept-list { gap: 12px; } .concept-art { height: 100px; } }
 @media (max-width: 700px) {
@@ -94,6 +93,7 @@
   .scene-action button { min-width: 180px; }
   .scene-index { padding-top: 40px; }
   .index-heading { flex-direction: column; gap: 10px; }
+  .index-heading h2 { font-size: 20px; }
   .concept-list { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px 16px; }
   .concept-list > :last-child { grid-column: 1 / -1; display: grid; grid-template-columns: 1fr 1fr; column-gap: 16px; }
   .concept-list > :last-child .concept-art { grid-row: 1 / 4; margin-bottom: 0; }
