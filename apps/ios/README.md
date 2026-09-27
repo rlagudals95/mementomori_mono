@@ -92,3 +92,5 @@ Choose hourglass, record, book, tree rings, or one life from the dashboard or Se
 Artwork lives in `packages/memento-core/Sources/MementoScenes`, shared with Mac. Regenerate the Xcode project with `python3 scripts/generate-ios-project.py` when needed.
 
 Small widgets use 22-point split-row seconds. Artwork occupies a separate upper-right header cell, capped by the available width and height and clipped to its bounds. It has no scale or positional overflow. Caption/counter/progress space is reserved before sizing the artwork. The medium-widget layout remains unchanged.
+
+Widget content uses matching 16-point left/right padding. Compact scenes fit their visible artwork bounds and align to the right edge of the header; counters and the progress line share that same content edge. Counter font size shrinks with available width on smaller widgets.

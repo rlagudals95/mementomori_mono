@@ -110,12 +110,14 @@ struct SceneWidgetFace: View {
     private var background: Color { dark ? Design.ink : Design.paper }
     var body: some View {
         GeometryReader { geometry in
-            VStack(alignment: .leading, spacing: 5) {
+            let padding: CGFloat = 16
+            let contentWidth = max(0, geometry.size.width - padding * 2)
+            VStack(alignment: .leading, spacing: 6) {
                 if compact {
                     // Reserve the caption, two counter rows, progress line and padding first.
                     // Artwork is clipped to its own header cell; it cannot paint over text.
-                    let headerHeight = max(0, min(64, geometry.size.height - 116))
-                    let artWidth = max(0, min(76, (geometry.size.width - 28) * 0.45))
+                    let headerHeight = max(0, min(56, geometry.size.height - 124))
+                    let artWidth = max(0, min(64, contentWidth * 0.42))
                     HStack(alignment: .top, spacing: 6) {
                         Text("mementomori.").font(Design.font(9, weight: .bold))
                             .lineLimit(1).minimumScaleFactor(0.7)
@@ -124,7 +126,7 @@ struct SceneWidgetFace: View {
                             .clipped()
                     }.frame(height: headerHeight, alignment: .top).clipped()
                     Text("당신의 시간은 유한합니다.").font(Design.font(9)).opacity(0.65).lineLimit(1)
-                    counter(width: geometry.size.width - 28)
+                    counter(width: contentWidth).frame(width: contentWidth, alignment: .trailing)
                 } else {
                     Text("mementomori.").font(Design.font(11, weight: .bold))
                     HStack(spacing: 12) {
@@ -138,18 +140,19 @@ struct SceneWidgetFace: View {
                     }.frame(maxHeight: .infinity)
                 }
                 LifeLine(progress: snapshot.progress, color: ink)
-            }.padding(14).foregroundStyle(ink)
+            }.frame(width: contentWidth, alignment: .leading)
+                .padding(padding).foregroundStyle(ink)
                 .frame(width: geometry.size.width, height: geometry.size.height)
         }
     }
     private var art: some View {
-        TimeSceneView(scene: scene, progress: snapshot.progress, years: years, ink: ink, background: background, motionEnabled: false)
+        TimeSceneView(scene: scene, progress: snapshot.progress, years: years, ink: ink, background: background, motionEnabled: false, compactArtwork: compact)
             .allowsHitTesting(false).accessibilityHidden(true)
     }
     @ViewBuilder private func counter(width: CGFloat) -> some View {
         if snapshot.passed { Text("오늘").font(Design.font(compact ? 22 : 28, weight: .bold)) }
         else if timer && compact {
-            SquareSecondsCountdown(end: snapshot.end, seconds: snapshot.seconds, width: width, size: 22)
+            SquareSecondsCountdown(end: snapshot.end, seconds: snapshot.seconds, width: width, size: min(22, width / 6.2))
         } else if timer {
             SecondsCountdown(end: snapshot.end, fallback: snapshot.seconds)
                 .font(Design.font(30, weight: .bold)).monospacedDigit().lineLimit(1).minimumScaleFactor(0.5)

@@ -41,9 +41,11 @@ public struct TimeSceneView: View {
     let ink: Color
     let background: Color
     let motionEnabled: Bool
-    public init(scene: TimeScene, progress: Double, years: Double, ink: Color, background: Color, motionEnabled: Bool) {
+    let compactArtwork: Bool
+    public init(scene: TimeScene, progress: Double, years: Double, ink: Color, background: Color, motionEnabled: Bool, compactArtwork: Bool = false) {
         self.scene = scene; self.progress = min(1, max(0, progress)); self.years = min(120, max(1, years))
         self.ink = ink; self.background = background; self.motionEnabled = motionEnabled
+        self.compactArtwork = compactArtwork
     }
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var alternate = false
@@ -69,10 +71,21 @@ public struct TimeSceneView: View {
     }
     private func draw(context: inout GraphicsContext, size: CGSize, date: Date) {
         let time = animated ? date.timeIntervalSince1970 : 0
-                let scale = min(size.width / 440, size.height / 340)
-                context.translateBy(x: (size.width - 440 * scale) / 2, y: (size.height - 340 * scale) / 2)
+                let bounds: CGRect
+                if compactArtwork {
+                    switch scene {
+                    case .hourglass: bounds = CGRect(x: 306, y: 38, width: 188, height: 288)
+                    case .record: bounds = CGRect(x: 216, y: 28, width: 377, height: 294)
+                    case .book: bounds = CGRect(x: 220, y: 67, width: 360, height: 226)
+                    case .tree: bounds = CGRect(x: 252, y: 27, width: 296, height: 296)
+                    case .game: bounds = CGRect(x: 180, y: 40, width: 440, height: 280)
+                    }
+                } else { bounds = CGRect(x: 180, y: 0, width: 440, height: 340) }
+                let scale = min(size.width / bounds.width, size.height / bounds.height)
+                context.translateBy(x: compactArtwork ? size.width - bounds.width * scale : (size.width - bounds.width * scale) / 2,
+                                    y: compactArtwork ? 0 : (size.height - bounds.height * scale) / 2)
                 context.scaleBy(x: scale, y: scale)
-                context.translateBy(x: -180, y: 0)
+                context.translateBy(x: -bounds.minX, y: -bounds.minY)
                 func line(_ points: [CGPoint], opacity: Double = 1, width: CGFloat = 1.8) {
                     guard let first = points.first else { return }
                     var path = Path(); path.move(to: first)
