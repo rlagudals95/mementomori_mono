@@ -37,3 +37,9 @@ iOS 앱은 UserDefaults의 settings.v1에 공통 설정을 저장합니다. 앱�
 WidgetKit의 실행 예산 때문에 임의의 숫자를 매초 다시 그리지 않습니다. 앱은 현재 시각 기반 TimelineView, 위젯 타이머는 시스템의 동적 날짜 Text, 날 표시에는 공용 WidgetClock의 날짜 경계 timeline을 사용합니다. iOS UI와 디자인은 공용 Foundation package에 넣지 않습니다.
 
 프로젝트 생성은 표준 라이브러리 Python 스크립트로 수행하며 생성된 Xcode 프로젝트를 추적합니다. 프로젝트의 Debug/Release는 `apps/ios/Config/Signing.xcconfig`를 읽고, 이 파일은 Git에서 제외한 `LocalSigning.xcconfig`를 선택적으로 포함합니다. 개인 Team ID는 로컬 파일에만 기록합니다. 재생성해도 이 파일을 유지하며, 파일이 없는 CI는 계정 없는 시뮬레이터로 빌드합니다. Xcode target에 Team을 직접 지정하면 로컬 파일을 덮어쓰는 설정이 프로젝트에 생길 수 있으므로 Team 변경은 로컬 파일에서 수행합니다. 공개 배포용 서명·TestFlight·App Store 제출은 이번 개발에 포함하지 않습니다.
+
+## Native scene rendering
+
+The local memento-core Swift package now exports two products: Foundation-based `MementoCore` for calculation and validation, and SwiftUI-based `MementoScenes` for native artwork. Mac, iPhone, and home-screen widgets share the five scene drawings and interactions through MementoScenes. Platform screen layout, window handling, WidgetKit, and persistence stay in each app.
+
+On iOS, `scene.theme` is stored in app defaults and mirrored to the App Group. Selection requests a WidgetKit timeline reload; iOS controls when that refresh appears. `scene.motion` is app-only. Existing settings-v1 JSON and profile keys stay unchanged; scene preferences are not included in JSON transfer or automatic cross-device sync. App motion pauses when inactive or presenting settings/help, and respects Reduce Motion. Widget art is static; existing date text owns live seconds. Lock-screen layouts remain compact.

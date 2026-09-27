@@ -1,8 +1,10 @@
 import SwiftUI
 import MementoCore
+import MementoScenes
 
 struct HomeView: View {
     @EnvironmentObject private var store: Store
+    @Environment(\.scenePhase) private var scenePhase
     @State private var showSettings = false
     @State private var showWidgets = false
     var body: some View {
@@ -61,7 +63,12 @@ struct HomeView: View {
                             Text("초").tag("seconds"); Text("일").tag("days")
                         }.pickerStyle(.segmented).frame(width: 110)
                     }
+                    Picker("시간 테마", selection: $store.scene) {
+                        ForEach(TimeScene.allCases) { Text($0.title).tag($0) }
+                    }.font(Design.font(14)).accessibilityIdentifier("scene-picker")
                     VStack(alignment: .leading, spacing: 24) {
+                        TimeSceneView(scene: store.scene, progress: snapshot.progress, years: profile.years, ink: Design.paper, background: Design.ink, motionEnabled: store.motionEnabled && scenePhase == .active && !showSettings && !showWidgets)
+                            .frame(height: 230).id(store.scene).accessibilityIdentifier("time-scene")
                         Text(snapshot.passed ? "오늘도, 당신의 시간입니다." : "당신의 시간은 유한합니다.")
                             .font(Design.font(14)).opacity(0.7)
                         HStack(alignment: .firstTextBaseline, spacing: 6) {
@@ -72,7 +79,7 @@ struct HomeView: View {
                         }
                         LifeLine(progress: snapshot.progress, color: Design.paper)
                         HStack {
-                            Text(snapshot.passed ? "오늘도 삶은 계속됩니다." : Design.thought(store.settings, at: context.date)).font(Design.font(13))
+                            Text(snapshot.passed ? "오늘도 삶은 계속됩니다." : (store.settings.state.intention?.date == Life.dayKey(context.date) ? Design.thought(store.settings, at: context.date) : store.scene.message)).font(Design.font(13))
                                 .fixedSize(horizontal: false, vertical: true)
                             Spacer(minLength: 8)
                             Text("\(snapshot.progress * 100, specifier: "%.1f")%")

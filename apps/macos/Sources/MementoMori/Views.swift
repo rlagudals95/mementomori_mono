@@ -1,6 +1,7 @@
 import SwiftUI
 import AppKit
 import MementoCore
+import MementoScenes
 
 func moriFont(_ size: CGFloat, weight: Font.Weight = .regular) -> Font {
     let face = weight == .bold ? "Bold" : (weight == .semibold ? "SemiBold" : (weight == .medium ? "Medium" : "Regular"))

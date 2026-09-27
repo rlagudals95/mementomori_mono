@@ -1,6 +1,7 @@
 import SwiftUI
 import WidgetKit
 import MementoCore
+import MementoScenes
 
 struct ClockEntry: TimelineEntry {
     var date: Date
@@ -9,6 +10,8 @@ struct ClockEntry: TimelineEntry {
     var snapshot: Snapshot?
     var invalid = false
     var example = false
+    var scene: TimeScene = .hourglass
+    var years: Double = 83.7
 }
 struct ClockProvider: AppIntentTimelineProvider {
     func placeholder(in context: Context) -> ClockEntry { preview() }
@@ -38,7 +41,7 @@ struct ClockProvider: AppIntentTimelineProvider {
             configuration.display = settings.state.mode == "days" ? .days : .timer
             if configuration.message.isEmpty { configuration.message = Design.thought(settings, at: date) }
         }
-        return ClockEntry(date: date, timerStart: timerStart ?? date, configuration: configuration, snapshot: value, invalid: !birthday.isEmpty && value == nil)
+        return ClockEntry(date: date, timerStart: timerStart ?? date, configuration: configuration, snapshot: value, invalid: !birthday.isEmpty && value == nil, scene: TimeScene(rawValue: SharedSettings.defaults?.string(forKey: "scene.theme") ?? "") ?? .hourglass, years: profile(configuration)?.years ?? 83.7)
     }
     private func preview() -> ClockEntry {
         let configuration = ClockConfiguration(); let date = Date()
@@ -54,9 +57,13 @@ struct ClockWidgetView: View {
             if family == .accessoryRectangular || family == .accessoryInline || family == .accessoryCircular {
                 accessory
             } else {
+                if let snapshot = entry.snapshot {
+                    SceneWidgetFace(snapshot: snapshot, scene: entry.scene, years: entry.years, timer: entry.configuration.display == .timer, dark: entry.configuration.theme == .dark, compact: family == .systemSmall)
+                } else {
                 WidgetFace(snapshot: entry.snapshot, date: entry.date, timerStart: entry.timerStart,
                            timer: entry.configuration.display == .timer, dark: entry.configuration.theme == .dark,
                            compact: family == .systemSmall, message: String(entry.configuration.message.prefix(100)), invalid: entry.invalid, example: entry.example)
+                }
             }
         }.widgetURL(entry.snapshot == nil ? URL(string: "mementomori://widget-help") : nil)
             .containerBackground(for: .widget) { entry.configuration.theme == .dark ? Design.ink : Design.paper }
@@ -87,6 +94,57 @@ struct ClockWidgetView: View {
                     }
                 } else { Text(entry.invalid ? "생년월일을 확인해 주세요." : "앱에서 시간을 설정하세요.").font(Design.font(11)) }
             }.frame(maxWidth: .infinity, alignment: .leading)
+        }
+    }
+}
+
+// Widgets render static artwork; WidgetKit's date text owns the live seconds.
+struct SceneWidgetFace: View {
+    let snapshot: Snapshot
+    let scene: TimeScene
+    let years: Double
+    let timer: Bool
+    let dark: Bool
+    let compact: Bool
+    private var ink: Color { dark ? Design.paper : Design.ink }
+    private var background: Color { dark ? Design.ink : Design.paper }
+    var body: some View {
+        GeometryReader { geometry in
+            VStack(alignment: .leading, spacing: 5) {
+                Text("mementomori.").font(Design.font(11, weight: .bold))
+                if compact {
+                    art.frame(height: max(22, geometry.size.height - 139))
+                    Text("당신의 시간은 유한합니다.").font(Design.font(9)).opacity(0.65).lineLimit(1)
+                    counter(width: geometry.size.width - 28)
+                } else {
+                    HStack(spacing: 12) {
+                        art.frame(width: geometry.size.width * 0.28)
+                        VStack(alignment: .leading, spacing: 6) {
+                            Text(snapshot.passed ? "오늘도, 당신의 시간입니다." : "당신의 시간은 유한합니다.")
+                                .font(Design.font(11)).opacity(0.65).lineLimit(1).minimumScaleFactor(0.7)
+                            counter(width: geometry.size.width * 0.6 - 28)
+                            Text(scene.message).font(Design.font(10)).opacity(0.65).lineLimit(2)
+                        }
+                    }.frame(maxHeight: .infinity)
+                }
+                LifeLine(progress: snapshot.progress, color: ink)
+            }.padding(14).foregroundStyle(ink)
+                .frame(width: geometry.size.width, height: geometry.size.height)
+        }
+    }
+    private var art: some View {
+        TimeSceneView(scene: scene, progress: snapshot.progress, years: years, ink: ink, background: background, motionEnabled: false)
+            .allowsHitTesting(false).accessibilityHidden(true)
+    }
+    @ViewBuilder private func counter(width: CGFloat) -> some View {
+        if snapshot.passed { Text("오늘").font(Design.font(28, weight: .bold)) }
+        else if timer && compact {
+            SquareSecondsCountdown(end: snapshot.end, seconds: snapshot.seconds, width: width, size: 25)
+        } else if timer {
+            SecondsCountdown(end: snapshot.end, fallback: snapshot.seconds)
+                .font(Design.font(30, weight: .bold)).monospacedDigit().lineLimit(1).minimumScaleFactor(0.5)
+        } else {
+            Text("\(Design.number(snapshot.days))일").font(Design.font(28, weight: .bold)).monospacedDigit().lineLimit(1).minimumScaleFactor(0.5)
         }
     }
 }

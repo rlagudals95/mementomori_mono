@@ -84,3 +84,9 @@ UITests/   # 실제 시뮬레이터 사용 흐름
 `MementoMori.xcodeproj`는 저장소에 포함되어 있어 별도 프로젝트 생성 도구 설치가 필요 없습니다. 소스 파일을 추가한 뒤 프로젝트를 재생성하려면 `python3 scripts/generate-ios-project.py`를 실행합니다. 재생성은 `Config/LocalSigning.xcconfig`를 변경하지 않아 개인 Team 설정을 유지합니다. 로컬 파일이 없어도 시뮬레이터와 CI 빌드는 가능합니다. 일반 빌드는 프로젝트를 재생성하지 않습니다.
 
 서명 설정의 파일 분리는 [Apple의 build configuration 파일 방식](https://developer.apple.com/documentation/xcode/adding-a-build-configuration-file-to-your-project)을 사용합니다. 인증서나 프로비저닝 파일은 이 설정 파일에 넣지 않습니다.
+
+## Native time themes
+
+Choose hourglass, record, book, tree rings, or one life from the dashboard or Settings. Tap the artwork for its interaction; the countdown keeps running. Selection persists and also applies to home-screen widgets. Widget artwork is static, while the existing live seconds text (including small-widget split rows) continues to update. Lock-screen layouts remain unchanged. Motion can be disabled and respects Reduce Motion.
+
+Artwork lives in `packages/memento-core/Sources/MementoScenes`, shared with Mac. Regenerate the Xcode project with `python3 scripts/generate-ios-project.py` when needed.

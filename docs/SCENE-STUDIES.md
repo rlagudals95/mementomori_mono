@@ -57,3 +57,7 @@ Choose a scene in Settings → 시간을 바라보는 방식, or from the widget
 The existing window resize, drag, dark/light palette and Pretendard font remain. Short wide windows put art beside the counter; taller windows put art above it. At the minimum 190×84 size, readability takes priority and the illustration is omitted.
 
 Scene and motion preferences are local Mac UserDefaults keys `scene.theme` and `scene.motion`; the cross-platform settings-v1 JSON contract remains unchanged. Animations respect macOS Reduce Motion and the explicit motion toggle; hiding the floating panel pauses its animation. Countdown timestamps continue to come from the clock, rather than animation frames. Passive motion is limited to 20 frames per second.
+
+## iOS implementation
+
+The same five native scenes appear in the iPhone dashboard and home-screen widgets. App scenes animate and respond to taps; widget scenes are static and keep the existing live seconds text, including split rows for small widgets. The lock-screen counter layout stays compact. Rendering and interaction code are shared with macOS through the MementoScenes Swift package product, without WebViews. Theme selection persists locally and is mirrored to the App Group, followed by a WidgetKit timeline reload request. Widget refresh timing is controlled by iOS.

@@ -7,6 +7,6 @@ let package = Package(
     products: [.executable(name: "MementoMori", targets: ["MementoMori"])],
     dependencies: [.package(path: "../../packages/memento-core")],
     targets: [
-        .executableTarget(name: "MementoMori", dependencies: [.product(name: "MementoCore", package: "memento-core")], resources: [.copy("Resources")])
+        .executableTarget(name: "MementoMori", dependencies: [.product(name: "MementoCore", package: "memento-core"), .product(name: "MementoScenes", package: "memento-core")], resources: [.copy("Resources")])
     ]
 )

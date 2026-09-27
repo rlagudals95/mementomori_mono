@@ -1,6 +1,7 @@
 import AppKit
 import SwiftUI
 import MementoCore
+import MementoScenes
 
 @MainActor final class Store: ObservableObject {
     @Published var settings: SettingsFile

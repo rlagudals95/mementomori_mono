@@ -38,11 +38,30 @@ final class MementoMoriUITests: XCTestCase {
         if compact {
             XCTAssertLessThan(counter.frame.width, 200)
             XCTAssertGreaterThan(counter.frame.height, 40, "Two lines should be visibly rendered")
-        } else { XCTAssertGreaterThan(timer.frame.width, 200, "Verify the horizontal medium widget") }
+        } else { XCTAssertGreaterThan(timer.frame.width, 120, "Counter must stay readable beside the scene in the medium widget") }
         let before = timer.label
         let changes = XCTNSPredicateExpectation(predicate: NSPredicate(format: "label != %@", before), object: timer)
         XCTAssertEqual(XCTWaiter.wait(for: [changes], timeout: 8), .completed, "Widget seconds must keep counting")
         let image = XCTAttachment(screenshot: home.screenshot()); image.name = compact ? "Square split seconds widget" : "Home screen widget"; image.lifetime = .keepAlways; self.add(image)
+    }
+
+    func testSceneSelectionPersistsAndClockContinues() {
+        testProfileValidationPersistenceAndClock()
+        let app = XCUIApplication(); app.launch()
+        let picker = app.buttons["scene-picker"]
+        XCTAssertTrue(picker.waitForExistence(timeout: 5))
+        picker.tap()
+        app.buttons["음악 · 레코드"].tap()
+        let scene = app.otherElements["time-scene"]
+        XCTAssertTrue(scene.waitForExistence(timeout: 5))
+        scene.tap()
+        let counter = app.staticTexts["countdown"]
+        let before = counter.label
+        let changes = XCTNSPredicateExpectation(predicate: NSPredicate(format: "label != %@", before), object: counter)
+        XCTAssertEqual(XCTWaiter.wait(for: [changes], timeout: 6), .completed)
+        app.terminate(); app.launch()
+        XCTAssertTrue(app.buttons["scene-picker"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.buttons["scene-picker"].label.contains("레코드"), app.debugDescription)
     }
 
     func testProfileValidationPersistenceAndClock() {

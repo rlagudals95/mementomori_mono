@@ -1,10 +1,10 @@
 import SwiftUI
 import MementoCore
 
-enum TimeScene: String, CaseIterable, Identifiable {
+public enum TimeScene: String, CaseIterable, Identifiable {
     case hourglass, record, book, tree, game
-    var id: String { rawValue }
-    var title: String {
+    public var id: String { rawValue }
+    public var title: String {
         switch self {
         case .hourglass: return "모래시계"
         case .record: return "음악 · 레코드"
@@ -13,7 +13,7 @@ enum TimeScene: String, CaseIterable, Identifiable {
         case .game: return "게임 · 한 번의 생명"
         }
     }
-    var message: String {
+    public var message: String {
         switch self {
         case .hourglass: return "흘러간 시간은 돌아오지 않습니다."
         case .record: return "당신의 삶은 한 번만 재생됩니다."
@@ -22,7 +22,7 @@ enum TimeScene: String, CaseIterable, Identifiable {
         case .game: return "이 생명에는 다시 시작이 없습니다."
         }
     }
-    var action: String {
+    public var action: String {
         switch self {
         case .hourglass: return "틀 뒤집기"
         case .record: return "레코드 멈춤 / 재생"
@@ -34,13 +34,17 @@ enum TimeScene: String, CaseIterable, Identifiable {
 }
 
 // Native vector artwork. All scenes share the same real lifetime ratio.
-struct TimeSceneView: View {
+public struct TimeSceneView: View {
     let scene: TimeScene
     let progress: Double
     let years: Double
     let ink: Color
     let background: Color
     let motionEnabled: Bool
+    public init(scene: TimeScene, progress: Double, years: Double, ink: Color, background: Color, motionEnabled: Bool) {
+        self.scene = scene; self.progress = min(1, max(0, progress)); self.years = min(120, max(1, years))
+        self.ink = ink; self.background = background; self.motionEnabled = motionEnabled
+    }
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var alternate = false
     @State private var jumpStarted = Date.distantPast
@@ -49,7 +53,7 @@ struct TimeSceneView: View {
     @State private var platterStarted = Date()
     private var animated: Bool { motionEnabled && !reduceMotion }
 
-    var body: some View {
+    public var body: some View {
         TimelineView(.animation(minimumInterval: 1.0 / 20, paused: !animated)) { timeline in
             Canvas { context, size in
                 draw(context: &context, size: size, date: timeline.date)
@@ -178,4 +182,9 @@ struct TimeSceneView: View {
         if scene == .hourglass { flipStarted = .now }
         if scene == .game { jumpStarted = .now } else { alternate.toggle() }
     }
+}
+
+private func moriFont(_ size: CGFloat, weight: Font.Weight = .regular) -> Font {
+    let face = weight == .bold ? "Bold" : "Regular"
+    return .custom("PretendardVariable-\(face)", size: size)
 }

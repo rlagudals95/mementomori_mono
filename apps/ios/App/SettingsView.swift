@@ -1,6 +1,7 @@
 import SwiftUI
 import UniformTypeIdentifiers
 import MementoCore
+import MementoScenes
 
 struct SettingsView: View {
     @EnvironmentObject private var store: Store
@@ -47,6 +48,17 @@ struct SettingsView: View {
                     }
                     if let error { Text(error).font(Design.font(12, weight: .bold)).accessibilityIdentifier("validation-error") }
                     Button("나의 시간 저장하기", action: save).buttonStyle(PrimaryButton()).accessibilityIdentifier("save-profile")
+                    Divider()
+                    Text("시간을 바라보는 방식").font(Design.font(16, weight: .bold))
+                    Picker("시간 테마", selection: $store.scene) {
+                        ForEach(TimeScene.allCases) { Text($0.title).tag($0) }
+                    }.accessibilityIdentifier("settings-scene-picker")
+                    Text(store.scene.message).font(Design.font(13))
+                    Text("앱의 그림을 터치하면 \(store.scene.action). 홈 화면 위젯에도 선택한 그림이 표시됩니다.")
+                        .font(Design.font(12)).foregroundStyle(.secondary)
+                    Toggle("모션 켜기", isOn: $store.motionEnabled)
+                    Text("동작 줄이기 설정을 따릅니다. 위젯의 그림은 정지 화면이며 초 카운트는 계속 흐릅니다.")
+                        .font(Design.font(11)).foregroundStyle(.secondary)
                     Divider()
                     Text("설정 파일로 이어보기").font(Design.font(16, weight: .bold))
                     Text("웹·Mac에서 내보낸 JSON을 가져오거나, 이 iPhone의 설정을 파일로 보관하세요.")
