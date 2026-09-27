@@ -7,6 +7,8 @@ final class MementoMoriUITests: XCTestCase {
     private func checkHomeWidget(compact: Bool) throws {
         testProfileValidationPersistenceAndClock()
         let app = XCUIApplication(); app.launch()
+        app.buttons["scene-picker"].tap()
+        app.buttons["모래시계"].tap()
         XCUIDevice.shared.press(.home)
         let home = XCUIApplication(bundleIdentifier: "com.apple.springboard")
         home.coordinate(withNormalizedOffset: CGVector(dx: 0.7, dy: 0.65)).press(forDuration: 1.2)

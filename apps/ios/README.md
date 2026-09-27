@@ -90,3 +90,5 @@ UITests/   # 실제 시뮬레이터 사용 흐름
 Choose hourglass, record, book, tree rings, or one life from the dashboard or Settings. Tap the artwork for its interaction; the countdown keeps running. Selection persists and also applies to home-screen widgets. Widget artwork is static, while the existing live seconds text (including small-widget split rows) continues to update. Lock-screen layouts remain unchanged. Motion can be disabled and respects Reduce Motion.
 
 Artwork lives in `packages/memento-core/Sources/MementoScenes`, shared with Mac. Regenerate the Xcode project with `python3 scripts/generate-ios-project.py` when needed.
+
+Small widgets place the scene in the upper-right header space and use 22-point split-row seconds. The medium-widget layout remains unchanged.

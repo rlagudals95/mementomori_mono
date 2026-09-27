@@ -111,12 +111,22 @@ struct SceneWidgetFace: View {
     var body: some View {
         GeometryReader { geometry in
             VStack(alignment: .leading, spacing: 5) {
-                Text("mementomori.").font(Design.font(11, weight: .bold))
                 if compact {
-                    art.frame(height: max(22, geometry.size.height - 139))
+                    ZStack(alignment: .topLeading) {
+                        Text("mementomori.").font(Design.font(10, weight: .bold))
+                        if scene == .hourglass {
+                            art.frame(width: 100, height: 64)
+                                .scaleEffect(1.2).offset(x: 18, y: -4)
+                                .frame(maxWidth: .infinity, alignment: .trailing)
+                        } else {
+                            art.frame(width: 72, height: 44).padding(.top, 14)
+                                .frame(maxWidth: .infinity, alignment: .trailing)
+                        }
+                    }.frame(height: max(56, geometry.size.height - 111), alignment: .topLeading)
                     Text("당신의 시간은 유한합니다.").font(Design.font(9)).opacity(0.65).lineLimit(1)
                     counter(width: geometry.size.width - 28)
                 } else {
+                    Text("mementomori.").font(Design.font(11, weight: .bold))
                     HStack(spacing: 12) {
                         art.frame(width: geometry.size.width * 0.28)
                         VStack(alignment: .leading, spacing: 6) {
@@ -139,7 +149,7 @@ struct SceneWidgetFace: View {
     @ViewBuilder private func counter(width: CGFloat) -> some View {
         if snapshot.passed { Text("오늘").font(Design.font(28, weight: .bold)) }
         else if timer && compact {
-            SquareSecondsCountdown(end: snapshot.end, seconds: snapshot.seconds, width: width, size: 25)
+            SquareSecondsCountdown(end: snapshot.end, seconds: snapshot.seconds, width: width, size: 22)
         } else if timer {
             SecondsCountdown(end: snapshot.end, fallback: snapshot.seconds)
                 .font(Design.font(30, weight: .bold)).monospacedDigit().lineLimit(1).minimumScaleFactor(0.5)
