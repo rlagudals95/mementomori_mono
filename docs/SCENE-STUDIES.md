@@ -47,3 +47,13 @@
 - 다크·라이트와 모바일 구성을 제공한다. 테마 탭은 방향키·Home·End, 버튼은 Enter/Space로 조작한다. 각 테마의 그림은 보조 시각 요소이고 수명 정보는 텍스트로도 제공한다.
 
 이 페이지는 실제 앱 적용 전의 후보 비교다. iPhone 홈 위젯에서 앱과 같은 매초 사용자 정의 애니메이션을 제공한다고 약속하지 않는다. 기본 숫자를 유지하고 장면은 정적인 도식으로 제공하는 방향을 먼저 검토한다.
+
+## macOS native implementation
+
+All five interest scenes are available in the floating Mac app, drawn with SwiftUI Canvas (no WebView). The artwork uses the user's actual lifetime ratio and reference lifespan. The book chapter and tree rings follow that same profile. Every shape displays total remaining seconds, including square windows.
+
+Choose a scene in Settings → 시간을 바라보는 방식, or from the widget's right-click menu. Click the art for the theme's small interaction: frame flip, platter pause, bookmark, magnification, or jump. These actions never alter the countdown. The settings preview uses the current profile.
+
+The existing window resize, drag, dark/light palette and Pretendard font remain. Short wide windows put art beside the counter; taller windows put art above it. At the minimum 190×84 size, readability takes priority and the illustration is omitted.
+
+Scene and motion preferences are local Mac UserDefaults keys `scene.theme` and `scene.motion`; the cross-platform settings-v1 JSON contract remains unchanged. Animations respect macOS Reduce Motion and the explicit motion toggle; hiding the floating panel pauses its animation. Countdown timestamps continue to come from the clock, rather than animation frames. Passive motion is limited to 20 frames per second.

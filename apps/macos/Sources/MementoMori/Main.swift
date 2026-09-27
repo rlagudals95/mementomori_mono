@@ -79,12 +79,12 @@ final class FloatingPanel: NSPanel {
         if settingsWindow == nil {
             let window = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 480, height: 710), styleMask: [.titled, .closable, .miniaturizable], backing: .buffered, defer: false)
             window.title = "메멘토모리 설정"; window.isReleasedWhenClosed = false
-            window.contentView = NSHostingView(rootView: SettingsView(store: store, showWidget: { [weak self] in self?.panel.orderFrontRegardless() }))
+            window.contentView = NSHostingView(rootView: SettingsView(store: store, showWidget: { [weak self] in self?.store.widgetVisible = true; self?.panel.orderFrontRegardless() }))
             window.center(); settingsWindow = window
         }
         NSApp.activate(ignoringOtherApps: true); settingsWindow?.makeKeyAndOrderFront(nil)
     }
-    @objc func toggleWidget() { if panel.isVisible { panel.orderOut(nil) } else { keepOnScreen(); panel.orderFrontRegardless() } }
+    @objc func toggleWidget() { store.widgetVisible = !panel.isVisible; if panel.isVisible { panel.orderOut(nil) } else { keepOnScreen(); panel.orderFrontRegardless() } }
     @objc func resetSize() { resizeWidget(store.settings.widget.variant) }
     @objc func quit() { NSApp.terminate(nil) }
     @objc func resetPosition() {

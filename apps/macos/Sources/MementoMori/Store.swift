@@ -5,6 +5,13 @@ import MementoCore
 @MainActor final class Store: ObservableObject {
     @Published var settings: SettingsFile
     @Published var message = ""
+    @Published var widgetVisible = true
+    @Published var scene = TimeScene(rawValue: UserDefaults.standard.string(forKey: "scene.theme") ?? "") ?? .hourglass {
+        didSet { UserDefaults.standard.set(scene.rawValue, forKey: "scene.theme") }
+    }
+    @Published var motionEnabled = UserDefaults.standard.object(forKey: "scene.motion") as? Bool ?? true {
+        didSet { UserDefaults.standard.set(motionEnabled, forKey: "scene.motion") }
+    }
     private let key = "settings.v1"
     init() {
         if let data = UserDefaults.standard.data(forKey: key) {

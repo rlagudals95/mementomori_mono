@@ -55,54 +55,40 @@ struct WidgetView: View {
             let width = geometry.size.width
             let height = geometry.size.height
             let compact = height < 150
-            let portrait = height > width * 1.2
             let padding: CGFloat = compact ? 16 : min(32, max(20, width * 0.065))
-            let heightBudget: CGFloat = compact ? (width >= 320 ? 13.0 : 27.0) : 92.0
-            let fontSize: CGFloat = max(12, min(96, (width - padding * 2 - 18) * (variant == .square ? 0.28 : 0.145), (height - padding * 2 - heightBudget) / 1.2))
             TimelineView(.periodic(from: .now, by: 1)) { context in
                 let profile = store.settings.state.profile ?? .example
                 let snapshot = try? Life.snapshot(profile, now: context.date)
                 let demo = store.settings.state.profile == nil
                 let intention = store.settings.state.intention
-                let thought = snapshot?.passed == true ? "오늘도 삶은 계속됩니다." : (intention?.date == Life.dayKey(context.date) && intention?.text.isEmpty == false ? intention!.text : (variant == .square ? "오늘은 다시 오지 않습니다." : "이 1초는 돌아오지 않습니다."))
-                VStack(alignment: .leading, spacing: 0) {
-                    if compact {
-                        HStack(alignment: .bottom, spacing: 12) {
-                            if width >= 320 {
-                                VStack(alignment: .leading, spacing: 9) {
-                                    Text("mementomori.").font(moriFont(9, weight: .bold))
-                                    caption(snapshot, demo: demo).font(moriFont(8))
-                                }
-                                Spacer(minLength: 0)
-                                number(snapshot, size: min(fontSize, 38))
-                            } else {
-                                VStack(alignment: .leading, spacing: 4) {
-                                    caption(snapshot, demo: demo).font(moriFont(8))
-                                    number(snapshot, size: min(fontSize, 32))
-                                }
-                            }
-                        }
-                        Spacer(minLength: 8)
-                        horizon(snapshot?.progress ?? 0)
-                    } else {
-                        HStack {
-                            Text("mementomori.").font(moriFont(11, weight: .bold))
-                            Spacer()
-                            Circle().fill(fg).frame(width: 4, height: 4)
-                        }
-                        Spacer(minLength: 12)
-                        caption(snapshot, demo: demo).font(moriFont(10))
-                        number(snapshot, size: fontSize).padding(.top, 4)
-                        if portrait { Spacer(minLength: 20) }
-                        horizon(snapshot?.progress ?? 0).padding(.top, 19)
-                        HStack(alignment: .top) {
-                            Text(thought).lineLimit(portrait ? 3 : 1)
-                            if width >= 280 {
-                                Spacer(minLength: 8)
-                                Text(String(format: "지나온 %.1f%%", (snapshot?.progress ?? 0) * 100)).foregroundStyle(muted)
-                            }
-                        }.font(moriFont(10)).padding(.top, 12)
+                VStack(alignment: .leading, spacing: compact ? 4 : 8) {
+                    if !compact {
+                        Text("mementomori.").font(moriFont(11, weight: .bold))
                     }
+                    if height < 250 && width >= 280 {
+                        HStack(spacing: 12) {
+                            scene(snapshot).frame(width: width * 0.27)
+                            VStack(alignment: .leading, spacing: 6) {
+                                caption(snapshot, demo: demo).font(moriFont(compact ? 8 : 10))
+                                number(snapshot, size: min(48, (width - padding * 2) * 0.075))
+                                if !compact { Text(store.scene.message).font(moriFont(10)).foregroundStyle(muted).fixedSize(horizontal: false, vertical: true) }
+                            }.frame(maxWidth: .infinity, alignment: .leading)
+                        }.frame(maxHeight: .infinity)
+                    } else if compact {
+                        caption(snapshot, demo: demo).font(moriFont(8))
+                        number(snapshot, size: 22)
+                    } else {
+                        scene(snapshot).frame(maxWidth: .infinity, maxHeight: .infinity)
+                        caption(snapshot, demo: demo).font(moriFont(width < 250 ? 8 : 10))
+                        number(snapshot, size: min(72, (width - padding * 2) * 0.12))
+                        if height >= 280 {
+                            Text(store.scene.message).font(moriFont(11)).foregroundStyle(muted).fixedSize(horizontal: false, vertical: true)
+                            if intention?.date == Life.dayKey(context.date), let text = intention?.text, !text.isEmpty {
+                                Text(text).font(moriFont(10)).foregroundStyle(muted).lineLimit(2)
+                            }
+                        }
+                    }
+                    horizon(snapshot?.progress ?? 0)
                 }
                 .padding(padding)
                 .frame(width: width, height: height, alignment: .topLeading)
@@ -125,9 +111,19 @@ struct WidgetView: View {
                         }
                 }
                 .onHover { hovered = $0 }
-                .contextMenu { Button("설정…", action: showSettings) }
+                .contextMenu {
+                    ForEach(TimeScene.allCases) { scene in
+                        Button(scene.title) { store.scene = scene }
+                    }
+                    Divider()
+                    Toggle("모션", isOn: $store.motionEnabled)
+                    Button("설정…", action: showSettings)
+                }
             }
         }
+    }
+    private func scene(_ snapshot: Snapshot?) -> some View {
+        TimeSceneView(scene: store.scene, progress: snapshot?.progress ?? 0, years: (store.settings.state.profile ?? .example).years, ink: fg, background: bg, motionEnabled: store.motionEnabled && store.widgetVisible).id(store.scene)
     }
     private func caption(_ snapshot: Snapshot?, demo: Bool) -> some View {
         return Text(snapshot == nil ? "기기 날짜를 확인해 주세요" : "\(demo ? "예시 · " : "")\(snapshot!.passed ? "오늘도, 당신의 시간입니다." : "당신의 시간은 유한합니다.")")
@@ -135,9 +131,9 @@ struct WidgetView: View {
     }
     private func number(_ snapshot: Snapshot?, size: CGFloat) -> some View {
         HStack(alignment: .firstTextBaseline, spacing: variant == .slim ? 4 : 7) {
-            Text(snapshot.map { (variant == .square ? $0.days : $0.seconds).formatted(.number.locale(Locale(identifier: "ko_KR"))) } ?? "—")
-                .font(moriFont(size, weight: .medium)).monospacedDigit().tracking(-1.5).lineLimit(1).minimumScaleFactor(0.65)
-            Text(variant == .square ? "일" : "초").font(moriFont(variant == .slim ? 8 : 10)).foregroundStyle(muted)
+            Text(snapshot.map { $0.seconds.formatted(.number.locale(Locale(identifier: "ko_KR"))) } ?? "—")
+                .font(moriFont(size, weight: .medium)).monospacedDigit().tracking(-0.6).lineLimit(1).minimumScaleFactor(0.5)
+            Text("초").font(moriFont(variant == .slim ? 8 : 10)).foregroundStyle(muted)
         }
         .accessibilityElement(children: .combine)
         .help("\((store.settings.state.profile ?? .example).years.formatted(.number.locale(Locale(identifier: "ko_KR"))))세까지 남은 시간 · 설정한 나이를 기준으로 계산하며 개인의 수명 예측이 아닙니다.")
@@ -190,6 +186,15 @@ struct SettingsView: View {
                 }
                 Divider()
                 VStack(alignment: .leading, spacing: 12) {
+                    Text("시간을 바라보는 방식").font(moriFont(15, weight: .semibold))
+                    Picker("시간 테마", selection: $store.scene) {
+                        ForEach(TimeScene.allCases) { Text($0.title).tag($0) }
+                    }
+                    TimeSceneView(scene: store.scene, progress: (try? Life.snapshot(store.settings.state.profile ?? .example))?.progress ?? 0, years: (store.settings.state.profile ?? .example).years, ink: .black, background: Color(white: 0.98), motionEnabled: store.motionEnabled).frame(height: 160)
+                    Text(store.scene.message).font(moriFont(12))
+                    Text("그림을 클릭하면 \(store.scene.action). 시간 카운트는 계속 흐릅니다.").font(moriFont(11)).foregroundStyle(.secondary)
+                    Toggle("모션 켜기", isOn: $store.motionEnabled)
+                    Text("시스템의 동작 줄이기 설정도 따릅니다.").font(moriFont(11)).foregroundStyle(.secondary)
                     Text("곁에 둘 모습").font(moriFont(15, weight: .semibold))
                     Picker("형태", selection: $store.settings.widget.variant) {
                         ForEach(Variant.allCases, id: \.self) { Text($0.label).tag($0) }
