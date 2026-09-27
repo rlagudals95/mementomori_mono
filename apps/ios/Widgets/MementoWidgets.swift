@@ -112,17 +112,17 @@ struct SceneWidgetFace: View {
         GeometryReader { geometry in
             VStack(alignment: .leading, spacing: 5) {
                 if compact {
-                    ZStack(alignment: .topLeading) {
-                        Text("mementomori.").font(Design.font(10, weight: .bold))
-                        if scene == .hourglass {
-                            art.frame(width: 100, height: 64)
-                                .scaleEffect(1.2).offset(x: 18, y: -4)
-                                .frame(maxWidth: .infinity, alignment: .trailing)
-                        } else {
-                            art.frame(width: 72, height: 44).padding(.top, 14)
-                                .frame(maxWidth: .infinity, alignment: .trailing)
-                        }
-                    }.frame(height: max(56, geometry.size.height - 111), alignment: .topLeading)
+                    // Reserve the caption, two counter rows, progress line and padding first.
+                    // Artwork is clipped to its own header cell; it cannot paint over text.
+                    let headerHeight = max(0, min(64, geometry.size.height - 116))
+                    let artWidth = max(0, min(76, (geometry.size.width - 28) * 0.45))
+                    HStack(alignment: .top, spacing: 6) {
+                        Text("mementomori.").font(Design.font(9, weight: .bold))
+                            .lineLimit(1).minimumScaleFactor(0.7)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                        art.frame(width: artWidth, height: headerHeight)
+                            .clipped()
+                    }.frame(height: headerHeight, alignment: .top).clipped()
                     Text("당신의 시간은 유한합니다.").font(Design.font(9)).opacity(0.65).lineLimit(1)
                     counter(width: geometry.size.width - 28)
                 } else {
@@ -147,14 +147,14 @@ struct SceneWidgetFace: View {
             .allowsHitTesting(false).accessibilityHidden(true)
     }
     @ViewBuilder private func counter(width: CGFloat) -> some View {
-        if snapshot.passed { Text("오늘").font(Design.font(28, weight: .bold)) }
+        if snapshot.passed { Text("오늘").font(Design.font(compact ? 22 : 28, weight: .bold)) }
         else if timer && compact {
             SquareSecondsCountdown(end: snapshot.end, seconds: snapshot.seconds, width: width, size: 22)
         } else if timer {
             SecondsCountdown(end: snapshot.end, fallback: snapshot.seconds)
                 .font(Design.font(30, weight: .bold)).monospacedDigit().lineLimit(1).minimumScaleFactor(0.5)
         } else {
-            Text("\(Design.number(snapshot.days))일").font(Design.font(28, weight: .bold)).monospacedDigit().lineLimit(1).minimumScaleFactor(0.5)
+            Text("\(Design.number(snapshot.days))일").font(Design.font(compact ? 22 : 28, weight: .bold)).monospacedDigit().lineLimit(1).minimumScaleFactor(0.5)
         }
     }
 }
